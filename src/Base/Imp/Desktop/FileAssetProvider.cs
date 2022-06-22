@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using FileMode = System.IO.FileMode;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Base.Imp.Desktop
 {
@@ -48,7 +49,7 @@ namespace Fusee.Base.Imp.Desktop
                 foreach (var baseDir in baseDirs)
                 {
                     if (!Directory.Exists(baseDir))
-                        throw new ArgumentException($"Asset base directory \"{baseDir}\"does not exist.", nameof(baseDir));
+                        ThrowHelper.ThrowArgumentException($"Asset base directory \"{baseDir}\"does not exist.", nameof(baseDir));
                     _baseDirs.Add(baseDir);
                 }
             }
@@ -117,7 +118,7 @@ namespace Fusee.Base.Imp.Desktop
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override Stream GetStream(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             // If it is an absolute path (e.g. C:\SomeDir\AnAssetFile.ext) open it directly
             if (Path.IsPathRooted(id))
@@ -147,7 +148,7 @@ namespace Fusee.Base.Imp.Desktop
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override bool CheckExists(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             // If it is an absolute path (e.g. C:\SomeDir\AnAssetFile.ext) directly check its presence
             if (Path.IsPathRooted(id))
@@ -174,7 +175,7 @@ namespace Fusee.Base.Imp.Desktop
         /// <returns>Implementors should return null if the asset cannot be retrieved. Otherwise returns a file stream to the asset.</returns>
         protected override async Task<Stream> GetStreamAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
 
 
@@ -207,7 +208,7 @@ namespace Fusee.Base.Imp.Desktop
         /// <returns>Implementors should return true if a stream can be created.</returns>
         protected override Task<bool> CheckExistsAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             // If it is an absolute path (e.g. C:\SomeDir\AnAssetFile.ext) directly check its presence
             if (Path.IsPathRooted(id))

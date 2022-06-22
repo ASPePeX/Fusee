@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Structures
 {
     /// <summary>
-    /// Tree data structure in which each internal node has up to eight children. 
+    /// Tree data structure in which each internal node has up to eight children.
     /// Octrees are most often used to partition a three-dimensional space by recursively subdividing it into eight octants.
     /// </summary>
     /// <typeparam name="P">The type of an octants payload.</typeparam>
@@ -100,7 +101,7 @@ namespace Fusee.Structures
             {
                 node = candidates.Pop();
                 if (callback == null)
-                    throw new NullReferenceException("The parameter 'callback' cannot be null!");
+                    ThrowHelper.ThrowArgumentNullException("The parameter 'callback' cannot be null!");
                 callback(node);
 
                 // add children as candidates

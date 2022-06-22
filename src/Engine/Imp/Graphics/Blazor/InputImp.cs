@@ -3,6 +3,7 @@ using Fusee.Base.Imp.Blazor;
 using Fusee.Engine.Common;
 using Fusee.Math.Core;
 using Microsoft.JSInterop;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -164,14 +165,14 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         public RenderCanvasInputDriverImp(IRenderCanvasImp renderCanvas, IJSRuntime runtime)
         {
             if (renderCanvas == null)
-                throw new ArgumentNullException(nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
 
             if (!(renderCanvas is RenderCanvasImp))
-                throw new ArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
 
             _canvas = ((RenderCanvasImp)renderCanvas)._canvas;
             if (_canvas == null)
-                throw new ArgumentNullException(nameof(_canvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(_canvas));
 
             this.runtime = runtime;
 
@@ -578,7 +579,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                                 1 => Axes.GetObjectProperty<float>("[1]"),
                                 2 => Axes.GetObjectProperty<float>("[2]"),
                                 3 => Axes.GetObjectProperty<float>("[3]"),
-                                _ => throw new InvalidOperationException($"Unsupported axis {iAxisId}."),
+                                _ => ThrowHelper.ThrowInvalidOperationException<float>($"Unsupported axis {iAxisId}."),
                             };
                         }
                     }
@@ -620,7 +621,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                             11 => (Buttons.GetObjectProperty<int>("[11]")) != 0,
                             12 => (Buttons.GetObjectProperty<int>("[12]")) != 0,
                             13 => (Buttons.GetObjectProperty<int>("[13]")) != 0,
-                            _ => throw new InvalidOperationException($"Unsupported button {iButtonId}."),
+                            _ => ThrowHelper.ThrowInvalidOperationException<bool>($"Unsupported button {iButtonId}."),
                         };
                     }
                 }
@@ -754,7 +755,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <returns>No return, always throws.</returns>
         public float GetAxis(int iAxisId)
         {
-            throw new InvalidOperationException($"Unsupported axis {iAxisId}. This device does not support any axes at all.");
+            return ThrowHelper.ThrowInvalidOperationException<float>($"Unsupported axis {iAxisId}. This device does not support any axes at all.");
         }
 
         /// <summary>
@@ -765,7 +766,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <returns>No return, always throws.</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException($"Button {iButtonId} does not exist or is no pollable. Listen to the ButtonValueChanged event to receive keyboard notifications from this device.");
+            return ThrowHelper.ThrowInvalidOperationException<bool>($"Button {iButtonId} does not exist or is no pollable. Listen to the ButtonValueChanged event to receive keyboard notifications from this device.");
         }
     }
 
@@ -1111,13 +1112,13 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             return iAxisId switch
             {
-                (int)MouseAxes.X or (int)MouseAxes.Y => throw new InvalidOperationException("MouseAxes.X/Y are event-based axes. Do not call GetAxis!"),
+                (int)MouseAxes.X or (int)MouseAxes.Y => ThrowHelper.ThrowInvalidOperationException<int>("MouseAxes.X/Y are event-based axes. Do not call GetAxis!"),
                 (int)MouseAxes.Wheel => _currentMouseWheel,
                 (int)MouseAxes.MinX => 0,
                 (int)MouseAxes.MaxX => GetWindowWidth(),
                 (int)MouseAxes.MinY => 0,
                 (int)MouseAxes.MaxY => GetWindowHeight(),//return 9999;
-                _ => throw new InvalidOperationException($"Unknown axis {iAxisId}. Cannot get value for unknown axis."),
+                _ => ThrowHelper.ThrowInvalidOperationException<int>($"Unknown axis {iAxisId}. Cannot get value for unknown axis."),
             };
         }
 
@@ -1129,7 +1130,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <returns>No return, always throws.</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException(
+            return ThrowHelper.ThrowInvalidOperationException<bool>(
                 $"Unsupported button {iButtonId}. This device does not support any to-be polled buttons at all.");
         }
     }
@@ -1260,7 +1261,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         internal void OnCanvasTouchStart(int id, float x, float y)
         {
             if (_activeTouchpoints.ContainsKey(id))
-                throw new InvalidOperationException($"HTML Touch id {id} is already tracked. Cannot track another touchpoint using this id.");
+                ThrowHelper.ThrowInvalidOperationException($"HTML Touch id {id} is already tracked. Cannot track another touchpoint using this id.");
 
             int inx = NextFreeTouchIndex;
             if (inx < 0)
@@ -1490,7 +1491,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 (int)TouchAxes.MaxX => GetWindowWidth(),
                 (int)TouchAxes.MinY => 0,
                 (int)TouchAxes.MaxY => GetWindowHeight(),
-                _ => throw new InvalidOperationException($"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this device."),
+                _ => ThrowHelper.ThrowInvalidOperationException<float>($"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this device."),
             };
         }
 
@@ -1517,7 +1518,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <returns>true if the button is hit, else false</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException($"Unknown button id {iButtonId}. This device supports no pollable buttons at all.");
+            return ThrowHelper.ThrowInvalidOperationException<bool>($"Unknown button id {iButtonId}. This device supports no pollable buttons at all.");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Tools.CmdLine
 {
@@ -7,8 +8,8 @@ namespace Fusee.Tools.CmdLine
     {
         public static string MakeRelativePath(String fromPath, String toPath)
         {
-            if (String.IsNullOrEmpty(fromPath)) throw new ArgumentNullException(nameof(fromPath));
-            if (String.IsNullOrEmpty(toPath)) throw new ArgumentNullException(nameof(toPath));
+            if (String.IsNullOrEmpty(fromPath)) ThrowHelper.ThrowArgumentNullException(nameof(fromPath));
+            if (String.IsNullOrEmpty(toPath)) ThrowHelper.ThrowArgumentNullException(nameof(toPath));
 
             Uri fromUri = new(fromPath);
             Uri toUri = new(toPath);
@@ -55,7 +56,7 @@ namespace Fusee.Tools.CmdLine
                     + sourceDirName);
             }
 
-            // If the destination directory doesn't exist, create it. 
+            // If the destination directory doesn't exist, create it.
             if (!Directory.Exists(destDirName))
             {
                 Directory.CreateDirectory(destDirName);
@@ -69,7 +70,7 @@ namespace Fusee.Tools.CmdLine
                 file.CopyTo(temppath, overwrite);
             }
 
-            // If copying subdirectories, copy them and their contents to new location. 
+            // If copying subdirectories, copy them and their contents to new location.
             if (copySubDirs)
             {
                 foreach (DirectoryInfo subdir in dirs)

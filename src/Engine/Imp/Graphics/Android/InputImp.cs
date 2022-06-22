@@ -1,5 +1,6 @@
 ﻿using Android.Views;
 using Fusee.Engine.Common;
+using Microsoft.Toolkit.Diagnostics;
 using OpenTK.Platform.Android;
 using System;
 using System.Collections.Generic;
@@ -19,14 +20,14 @@ namespace Fusee.Engine.Imp.Graphics.Android
         public RenderCanvasInputDriverImp(IRenderCanvasImp renderCanvas)
         {
             if (renderCanvas == null)
-                throw new ArgumentNullException(nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
 
             if (!(renderCanvas is RenderCanvasImp))
-                throw new ArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}.", nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}.", nameof(renderCanvas));
 
             _view = ((RenderCanvasImp)renderCanvas).View;
             if (_view == null)
-                throw new ArgumentNullException(nameof(_view));
+                ThrowHelper.ThrowArgumentNullException(nameof(_view));
 
             _touch = new TouchDeviceImp(_view);
             _keyboard = new KeyboardDeviceImp(_view);
@@ -228,7 +229,7 @@ namespace Fusee.Engine.Imp.Graphics.Android
         {
             // Diagnostics.Log($"TouchStart {id}");
             if (_activeTouchpoints.ContainsKey(id))
-                throw new InvalidOperationException(
+                ThrowHelper.ThrowInvalidOperationException(
                     $"Android Touch id {id} is already tracked. Cannot track another touchpoint using this id.");
 
             var inx = NextFreeTouchIndex;
@@ -506,7 +507,7 @@ namespace Fusee.Engine.Imp.Graphics.Android
                 (int)TouchAxes.MaxX => GetWindowWidth(),
                 (int)TouchAxes.MinY => 0,
                 (int)TouchAxes.MaxY => GetWindowHeight(),
-                _ => throw new InvalidOperationException(
+                _ => ThrowHelper.ThrowInvalidOperationException<int>(
 $"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this device."),
             };
         }
@@ -534,7 +535,7 @@ $"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this d
         /// <returns>true if the button is hit, else false</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException(
+            return ThrowHelper.ThrowInvalidOperationException<bool>(
                 $"Unknown button id {iButtonId}. This device supports no pollable buttons at all.");
         }
     }
@@ -698,7 +699,7 @@ $"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this d
         /// <returns>No return, always throws.</returns>
         public float GetAxis(int iAxisId)
         {
-            throw new InvalidOperationException($"Unsupported axis {iAxisId}. This device does not support any axis at all.");
+            return ThrowHelper.ThrowInvalidOperationException<float>($"Unsupported axis {iAxisId}. This device does not support any axis at all.");
         }
 
         /// <summary>
@@ -709,7 +710,7 @@ $"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this d
         /// <returns>No return, always throws.</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException($"Button {iButtonId} does not exist or is not pollable. Listen to the ButtonValueChanged event to receive keyboard notifications from this device.");
+            return ThrowHelper.ThrowInvalidOperationException<bool>($"Button {iButtonId} does not exist or is not pollable. Listen to the ButtonValueChanged event to receive keyboard notifications from this device.");
         }
     }
 
@@ -939,7 +940,7 @@ $"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this d
                 (int)MouseAxes.MaxX => _view.Width,
                 (int)MouseAxes.MinY => 0,
                 (int)MouseAxes.MaxY => _view.Height,
-                _ => throw new InvalidOperationException($"Unknown axis {iAxisId}. Cannot get value for unknown axis."),
+                _ => ThrowHelper.ThrowInvalidOperationException<float>($"Unknown axis {iAxisId}. Cannot get value for unknown axis."),
             };
         }
 
@@ -951,7 +952,7 @@ $"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this d
         /// <returns>No return, always throws.</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException(
+            return ThrowHelper.ThrowInvalidOperationException<bool>(
                 $"Unsupported axis {iButtonId}. This device does not support any to-be polled axes at all.");
         }
 

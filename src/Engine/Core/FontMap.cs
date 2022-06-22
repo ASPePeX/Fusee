@@ -1,7 +1,7 @@
 ﻿using Fusee.Base.Common;
 using Fusee.Base.Core;
 using Fusee.Math.Core;
-using System;
+using Microsoft.Toolkit.Diagnostics;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -87,9 +87,10 @@ namespace Fusee.Engine.Core
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
         public FontMap(Font font, uint pixelHeight, string alphabet = null)
         {
-            if (pixelHeight <= 0) throw new ArgumentOutOfRangeException(nameof(pixelHeight));
+            Guard.IsGreaterThan(pixelHeight, 0, nameof(pixelHeight));
+            Guard.IsNotNull(font, nameof(font));
 
-            _font = font ?? throw new ArgumentNullException(nameof(font));
+            _font = font;
             _pixelHeight = pixelHeight;
             _glyphOnMapCache = new Dictionary<uint, GlyphOnMap>();
             Alphabet = alphabet; // will invalidate _uptodate
@@ -104,7 +105,7 @@ namespace Fusee.Engine.Core
         /// <summary>
         /// Gets the image containing all characters specified in the <see cref="Alphabet"/>. Use this image
         /// as a texture used by individual rectangles each displaying a single character. Use the information
-        /// retrieved from <see cref="GetGlyphOnMap"/> to position the character rectangles and to align 
+        /// retrieved from <see cref="GetGlyphOnMap"/> to position the character rectangles and to align
         /// their texture coordinates.
         /// </summary>
         /// <value>
@@ -242,7 +243,7 @@ namespace Fusee.Engine.Core
         }
 
         /// <summary>
-        /// Gets and sets the pixel height of each character on this font. This setting will affect the 
+        /// Gets and sets the pixel height of each character on this font. This setting will affect the
         /// size of the font <see cref="Image"/> , so be careful with this setting.
         /// </summary>
         /// <value>
@@ -283,7 +284,7 @@ namespace Fusee.Engine.Core
         }
 
         /// <summary>
-        /// Gets the glyph on map information for the given character/glyph. This information can be used to create geometry textured with on single 
+        /// Gets the glyph on map information for the given character/glyph. This information can be used to create geometry textured with on single
         /// character from the font <see cref="Image"/>.
         /// </summary>
         /// <param name="c">The character to obtain information for.</param>

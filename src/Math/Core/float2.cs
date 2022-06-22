@@ -1,3 +1,4 @@
+using Microsoft.Toolkit.Diagnostics;
 using ProtoBuf;
 using System;
 using System.Globalization;
@@ -73,7 +74,7 @@ namespace Fusee.Math.Core
                 {
                     0 => x,
                     1 => y,
-                    _ => throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a float2 type"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<int>($"Index {idx} not eligible for a float2 type"),
                 };
             }
             set
@@ -89,7 +90,8 @@ namespace Fusee.Math.Core
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a float2 type");
+                        ThrowHelper.ThrowArgumentOutOfRangeException<int>($"Index {idx} not eligible for a float2 type");
+                        break;
                 }
             }
         }
@@ -948,7 +950,7 @@ namespace Fusee.Math.Core
             string[] strings = source.Split(new char[] { separator, '(', ')', ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (strings.Length != 2)
-                throw new FormatException("String parse for float2 did not result in exactly 2 items.");
+                ThrowHelper.ThrowFormatException("String parse for float2 did not result in exactly 2 items.");
 
             float[] floats = new float[strings.Length];
 
@@ -960,7 +962,7 @@ namespace Fusee.Math.Core
                 }
                 catch
                 {
-                    throw new FormatException();
+                    ThrowHelper.ThrowFormatException();
                 }
             }
 

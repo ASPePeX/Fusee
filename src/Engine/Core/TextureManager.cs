@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core
 {
@@ -23,7 +24,7 @@ namespace Fusee.Engine.Core
             if (!_identifierToTextureHandleDictionary.TryGetValue(textureDataEventArgs.Texture.SessionUniqueIdentifier,
                 out Tuple<ITextureHandle, ITextureBase> toBeUpdatedTextureTuple))
             {
-                throw new KeyNotFoundException("Texture is not registered.");
+                ThrowHelper.ThrowArgumentException("Texture is not registered.");
             }
 
             ITextureBase texture = textureDataEventArgs.Texture;
@@ -54,7 +55,8 @@ namespace Fusee.Engine.Core
                     _renderContextImp.SetTextureWrapMode(toBeUpdatedTextureTuple.Item1, ((ITextureBase)sender).WrapMode);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"Invalid argument: {textureDataEventArgs.ChangedEnum}");
+                    ThrowHelper.ThrowArgumentOutOfRangeException($"Invalid argument: {textureDataEventArgs.ChangedEnum}");
+                    break;
             }
         }
 

@@ -5,6 +5,7 @@ using ImGuiNET;
 using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.ImGuiDesktop
 {
@@ -23,14 +24,14 @@ namespace Fusee.ImGuiDesktop
         public ImGuiInputImp(IRenderCanvasImp renderCanvas)
         {
             if (renderCanvas == null)
-                throw new ArgumentNullException(nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
 
             if (renderCanvas is not ImGuiRenderCanvasImp)
-                throw new ArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
 
             _gameWindow = ((ImGuiRenderCanvasImp)renderCanvas)._gameWindow;
             if (_gameWindow == null)
-                throw new ArgumentNullException(nameof(_gameWindow));
+                ThrowHelper.ThrowArgumentNullException(nameof(_gameWindow));
 
             _keyboard = new KeyboardDeviceImp(_gameWindow);
             _mouse = new MouseDeviceImp(_gameWindow);

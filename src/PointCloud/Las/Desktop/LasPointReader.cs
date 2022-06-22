@@ -3,6 +3,7 @@ using Fusee.Math.Core;
 using Fusee.PointCloud.Common;
 using Fusee.PointCloud.Common.Accessors;
 using Fusee.PointCloud.Core.Accessors;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -53,7 +54,7 @@ namespace Fusee.PointCloud.Las.Desktop
 
         public IPointCloudOctree GetOctree()
         {
-            //convert to potree octree            
+            //convert to potree octree
             throw new NotImplementedException();
         }
 
@@ -70,7 +71,7 @@ namespace Fusee.PointCloud.Las.Desktop
             OpenLASFile(filename, ref _ptrToLASClass);
 
             if (_ptrToLASClass == IntPtr.Zero)
-                throw new FileNotFoundException($"{filename} not found!");
+                ThrowHelper.ThrowArgumentException($"{filename} not found!");
 
             // Read header
             var header = new LasInternalHeader();
@@ -135,7 +136,7 @@ namespace Fusee.PointCloud.Las.Desktop
         public TPoint[] ReadNPoints<TPoint>(int n, IPointAccessor pa) where TPoint : new()
         {
             if (_ptrToLASClass == IntPtr.Zero)
-                throw new FileNotFoundException("No file was specified yet. Call 'OpenFile' first");
+                ThrowHelper.ThrowArgumentNullException("No file was specified yet. Call 'OpenFile' first");
             var points = new TPoint[n];
             for (var i = 0; i < points.Length; i++)
             {
@@ -153,7 +154,7 @@ namespace Fusee.PointCloud.Las.Desktop
         public bool ReadNextPoint<TPoint>(ref TPoint point, IPointAccessor pa) where TPoint : new()
         {
             if (point == null)
-                throw new ArgumentOutOfRangeException("No writable point found!");
+                ThrowHelper.ThrowArgumentOutOfRangeException("No writable point found!");
 
             var hasNextPoint = true;
             ReadNextPoint(_ptrToLASClass, ref hasNextPoint);
@@ -201,7 +202,7 @@ namespace Fusee.PointCloud.Las.Desktop
                 case 3:
                     return PointType.PosD3ColF3InUs;
                 default:
-                    throw new ArgumentException($"Point data format with byte {MetaInfo.PointDataFormat} not recognized!");
+                    return ThrowHelper.ThrowArgumentException<PointType>($"Point data format with byte {MetaInfo.PointDataFormat} not recognized!");
             }
         }
 
@@ -216,7 +217,7 @@ namespace Fusee.PointCloud.Las.Desktop
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls    
+        private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {

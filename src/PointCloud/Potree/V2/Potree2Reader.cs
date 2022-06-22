@@ -5,6 +5,7 @@ using Fusee.PointCloud.Core;
 using Fusee.PointCloud.Core.Accessors;
 using Fusee.PointCloud.Core.Scene;
 using Fusee.PointCloud.Potree.V2.Data;
+using Microsoft.Toolkit.Diagnostics;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,7 @@ namespace Fusee.PointCloud.Potree.V2
                 case PointType.PosD3NorF3InUs:
                 case PointType.PosD3NorF3ColF3:
                 case PointType.PosD3ColF3InUsLblB:
-                    throw new ArgumentOutOfRangeException($"Invalid point type {ptType}");
+                    return ThrowHelper.ThrowArgumentOutOfRangeException<IPointCloud>($"Invalid point type {ptType}");
                 case PointType.PosD3ColF3LblB:
                     PointAccessor = new PosD3ColF3LblBAccessor();
                     var dataHandler = new PointCloudDataHandler<PosD3ColF3LblB>((PointAccessor<PosD3ColF3LblB>)PointAccessor, MeshMaker.CreateMeshPosD3ColF3LblB, LoadNodeData<PosD3ColF3LblB>);

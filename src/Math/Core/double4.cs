@@ -1,3 +1,4 @@
+using Microsoft.Toolkit.Diagnostics;
 using ProtoBuf;
 using System;
 using System.Globalization;
@@ -187,7 +188,7 @@ namespace Fusee.Math.Core
                     1 => y,
                     2 => z,
                     3 => w,
-                    _ => throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a double4 type"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<int>($"Index {idx} not eligible for a double4 type"),
                 };
             }
             set
@@ -211,7 +212,8 @@ namespace Fusee.Math.Core
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a double4 type");
+                        ThrowHelper.ThrowArgumentOutOfRangeException($"Index {idx} not eligible for a double4 type");
+                        break;
                 }
             }
         }
@@ -1071,7 +1073,7 @@ namespace Fusee.Math.Core
             string[] strings = source.Split(new char[] { separator, '(', ')', ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (strings.Length != 4)
-                throw new FormatException("String parse for double4 did not result in exactly 4 items.");
+                ThrowHelper.ThrowFormatException("String parse for double4 did not result in exactly 4 items.");
 
             double[] doubles = new double[strings.Length];
 
@@ -1083,7 +1085,7 @@ namespace Fusee.Math.Core
                 }
                 catch
                 {
-                    throw new FormatException();
+                    ThrowHelper.ThrowFormatException();
                 }
             }
 

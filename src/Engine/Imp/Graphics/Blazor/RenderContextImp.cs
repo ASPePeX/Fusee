@@ -5,6 +5,7 @@ using Fusee.Engine.Core;
 using Fusee.Engine.Core.ShaderShards;
 using Fusee.Engine.Imp.Blazor;
 using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,17 +58,17 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
         #region Image data related Members
 
-        private uint GetTexCompareMode(TextureCompareMode compareMode)
+        private static uint GetTexCompareMode(TextureCompareMode compareMode)
         {
             return compareMode switch
             {
                 TextureCompareMode.None => (int)NONE,
                 TextureCompareMode.CompareRefToTexture => (int)COMPARE_REF_TO_TEXTURE,
-                _ => throw new ArgumentException("Invalid compare mode."),
+                _ => ThrowHelper.ThrowArgumentException<uint>("Invalid compare mode."),
             };
         }
 
-        private Tuple<int, int> GetMinMagFilter(TextureFilterMode filterMode)
+        private static Tuple<int, int> GetMinMagFilter(TextureFilterMode filterMode)
         {
             int minFilter;
             int magFilter;
@@ -104,7 +105,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             return new Tuple<int, int>(minFilter, magFilter);
         }
 
-        private int GetWrapMode(TextureWrapMode wrapMode)
+        private static int GetWrapMode(TextureWrapMode wrapMode)
         {
             return wrapMode switch
             {
@@ -115,7 +116,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             };
         }
 
-        private uint GetDepthCompareFunc(Compare compareFunc)
+        private static uint GetDepthCompareFunc(Compare compareFunc)
         {
             return compareFunc switch
             {
@@ -127,15 +128,15 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 Compare.NotEqual => NOTEQUAL,
                 Compare.GreaterEqual => GEQUAL,
                 Compare.Always => ALWAYS,
-                _ => throw new ArgumentOutOfRangeException("value"),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<uint>(nameof(compareFunc)),
             };
         }
 
         private static TexturePixelInfo GetTexturePixelInfo(ImagePixelFormat pxFormat)
         {
-            uint internalFormat;
-            uint format;
-            uint pxType;
+            uint internalFormat = 0;
+            uint format = 0;
+            uint pxType = 0;
 
             //The wrong row alignment will lead to malformed textures.
             //See https://www.khronos.org/opengl/wiki/Common_Mistakes#Texture_upload_and_pixel_reads
@@ -178,15 +179,11 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                     rowAlignment = 1;
                     break;
                 case ColorFormat.fRGB32:
-                    throw new NotSupportedException("WebGL 2.0: fRGB32 not supported");
-                //internalFormat = RGB32F;
-                //format = RGB;
-                //pxType = FLOAT;
+                    ThrowHelper.ThrowNotSupportedException("WebGL 2.0: fRGB32 not supported");
+                    break;
                 case ColorFormat.fRGB16:
-                    throw new NotSupportedException("WebGL 2.0: fRGB16 not supported");
-                //internalFormat = RGB16F;
-                //format = RGB;
-                //pxType = HALF_FLOAT;
+                    ThrowHelper.ThrowNotSupportedException("WebGL 2.0: fRGB16 not supported");
+                    break;
                 case ColorFormat.fRGBA16:
                     internalFormat = RGBA16F;
                     format = RGBA;
@@ -198,7 +195,8 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                     pxType = FLOAT;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"CreateTexture: Image pixel format not supported {pxFormat.ColorFormat}");
+                    ThrowHelper.ThrowArgumentOutOfRangeException($"CreateTexture: Image pixel format not supported {pxFormat.ColorFormat}");
+                    break;
             }
 
             return new TexturePixelInfo()
@@ -222,9 +220,9 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 ColorFormat.Depth24 => new uint[tex.Width * tex.Height],
                 ColorFormat.Depth16 => new int[tex.Width * tex.Height],
                 ColorFormat.uiRgb8 => new int[tex.Width * tex.Height * 4],
-                ColorFormat.fRGB32 or ColorFormat.fRGB16 => throw new NotSupportedException("WebGL 2.0: fRGB32 or fRGB16 not supported"),
+                ColorFormat.fRGB32 or ColorFormat.fRGB16 => ThrowHelper.ThrowNotSupportedException<Array>("WebGL 2.0: fRGB32 or fRGB16 not supported"),
                 ColorFormat.fRGBA16 or ColorFormat.fRGBA32 => new float[tex.Width * tex.Height * 4],
-                _ => throw new ArgumentOutOfRangeException($"GetEmptyArray: Image pixel format not supported {tex.PixelFormat.ColorFormat}"),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<Array>($"GetEmptyArray: Image pixel format not supported {tex.PixelFormat.ColorFormat}"),
             };
         }
 
@@ -260,7 +258,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
             uint err = gl2.GetError();
             if (err != 0)
-                throw new ArgumentException($"Create Texture gl2 error {err}, Format {img.PixelFormat.ColorFormat}, BPP {img.PixelFormat.BytesPerPixel}, {pxInfo.InternalFormat}");
+                ThrowHelper.ThrowArgumentException($"Create Texture gl2 error {err}, Format {img.PixelFormat.ColorFormat}, BPP {img.PixelFormat.BytesPerPixel}, {pxInfo.InternalFormat}");
 
 
             ITextureHandle texID = new TextureHandle { TexHandle = id };
@@ -300,7 +298,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
             uint err = gl2.GetError();
             if (err != 0)
-                throw new ArgumentException($"Create Texture ITexture gl2 error {err}, Format {img.ImageData.PixelFormat.ColorFormat}, BPP {img.ImageData.PixelFormat.BytesPerPixel}, {pxInfo.InternalFormat}");
+                ThrowHelper.ThrowArgumentException($"Create Texture ITexture gl2 error {err}, Format {img.ImageData.PixelFormat.ColorFormat}, BPP {img.ImageData.PixelFormat.BytesPerPixel}, {pxInfo.InternalFormat}");
 
 
             ITextureHandle texID = new TextureHandle { TexHandle = id };
@@ -314,12 +312,9 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <returns>An ITextureHandle that can be used for texturing in the shader. In this implementation, the handle is an integer-value which is necessary for OpenTK.</returns>
         public ITextureHandle CreateTexture(IWritableTexture img)
         {
-            if (img is not WritableTexture wt)
-            {
-                throw new NotSupportedException("Blazor has no MultisampleWritableTexture support!");
-            }
-
-            return CreateTexture(wt);
+            // Blazor has no MultisampleWritableTexture support!
+            Guard.IsOfType(img, typeof(WritableTexture), nameof(img));
+            return CreateTexture(img as WritableTexture);
         }
 
         /// <summary>
@@ -358,7 +353,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
             uint err = gl2.GetError();
             if (err != 0)
-                throw new ArgumentException($"Create Texture IWritableTexture gl2 error {err}, Format {img.PixelFormat.ColorFormat}, BPP {img.PixelFormat.BytesPerPixel}, {pxInfo.InternalFormat}, {img.Height}, {img.Width}");
+                ThrowHelper.ThrowArgumentException($"Create Texture IWritableTexture gl2 error {err}, Format {img.PixelFormat.ColorFormat}, BPP {img.PixelFormat.BytesPerPixel}, {pxInfo.InternalFormat}, {img.Height}, {img.Width}");
 
             return texID;
         }
@@ -469,7 +464,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             if (vs == null || ps == null)
             {
                 Diagnostics.Error("Pixel or vertex shader empty");
-                throw new ArgumentException("Pixel or vertex shader empty");
+                ThrowHelper.ThrowArgumentException("Pixel or vertex shader empty");
             }
             string info;
 
@@ -482,7 +477,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             info = gl2.GetShaderInfoLog(vertexObject);
 
             if (info != string.Empty)
-                throw new ApplicationException(info);
+                ThrowHelper.ThrowExternalException(info);
 
             // Compile pixel shader
             gl2.ShaderSource(fragmentObject, ps);
@@ -490,7 +485,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             info = gl2.GetShaderInfoLog(fragmentObject);
 
             if (info != string.Empty)
-                throw new ApplicationException(info);
+                ThrowHelper.ThrowExternalException(info);
 
             WebGLProgram program = gl2.CreateProgram();
             gl2.AttachShader(program, fragmentObject);
@@ -619,7 +614,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                     SAMPLER_2D or UNSIGNED_INT_SAMPLER_2D or INT_SAMPLER_2D or SAMPLER_2D_SHADOW => typeof(ITextureBase),
                     SAMPLER_CUBE_SHADOW or SAMPLER_CUBE => typeof(IWritableCubeMap),
                     SAMPLER_2D_ARRAY or SAMPLER_2D_ARRAY_SHADOW => typeof(IWritableArrayTexture),
-                    _ => throw new ArgumentOutOfRangeException($"Argument {paramInfo.Type} of {paramInfo.Name} not recognized, size {paramInfo.Size}"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<Type>($"Argument {paramInfo.Type} of {paramInfo.Name} not recognized, size {paramInfo.Size}"),
                 };
                 paramList.Add(paramInfo);
             }
@@ -788,7 +783,8 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                     break;
                 case TextureType.Image2D:
                 default:
-                    throw new ArgumentException($"Unknown texture target: {texTarget}.");
+                    ThrowHelper.ThrowArgumentException($"Unknown texture target: {texTarget}.");
+                    break;
             }
         }
 
@@ -1014,7 +1010,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (attributes == null || attributes.Length == 0)
             {
-                throw new ArgumentException("Vertices must not be null or empty");
+                ThrowHelper.ThrowArgumentException("Vertices must not be null or empty");
             }
 
             int vboBytes;
@@ -1026,7 +1022,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != vertsBytes)
             {
-                throw new ApplicationException(string.Format(
+                ThrowHelper.ThrowExternalException(string.Format(
                     "Problem uploading attribute buffer to VBO ('{2}'). Tried to upload {0} bytes, uploaded {1}.",
                     vertsBytes, vboBytes, attributeName));
             }
@@ -1065,7 +1061,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (vertices == null || vertices.Length == 0)
             {
-                throw new ArgumentException("Vertices must not be null or empty");
+                ThrowHelper.ThrowArgumentException("Vertices must not be null or empty");
             }
 
             int vboBytes;
@@ -1096,7 +1092,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != vertsBytes)
-                throw new ApplicationException(string.Format("Problem uploading vertex buffer to VBO (vertices). Tried to upload {0} bytes, uploaded {1}.", vertsBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading vertex buffer to VBO (vertices). Tried to upload {0} bytes, uploaded {1}.", vertsBytes, vboBytes));
 
         }
 
@@ -1111,7 +1107,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (tangents == null || tangents.Length == 0)
             {
-                throw new ArgumentException("Tangents must not be null or empty");
+                ThrowHelper.ThrowArgumentException("Tangents must not be null or empty");
             }
 
             int vboBytes;
@@ -1137,7 +1133,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ARRAY_BUFFER, tangentsFlat, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != tangentBytes)
-                throw new ApplicationException(string.Format("Problem uploading vertex buffer to VBO (tangents). Tried to upload {0} bytes, uploaded {1}.", tangentBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading vertex buffer to VBO (tangents). Tried to upload {0} bytes, uploaded {1}.", tangentBytes, vboBytes));
 
         }
 
@@ -1152,7 +1148,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (bitangents == null || bitangents.Length == 0)
             {
-                throw new ArgumentException("BiTangents must not be null or empty");
+                ThrowHelper.ThrowArgumentException("BiTangents must not be null or empty");
             }
 
             int vboBytes;
@@ -1183,7 +1179,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ARRAY_BUFFER, bitangentsFlat, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != bitangentBytes)
-                throw new ApplicationException(string.Format("Problem uploading vertex buffer to VBO (bitangents). Tried to upload {0} bytes, uploaded {1}.", bitangentBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading vertex buffer to VBO (bitangents). Tried to upload {0} bytes, uploaded {1}.", bitangentBytes, vboBytes));
         }
 
         /// <summary>
@@ -1197,7 +1193,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (normals == null || normals.Length == 0)
             {
-                throw new ArgumentException("Normals must not be null or empty");
+                ThrowHelper.ThrowArgumentException("Normals must not be null or empty");
             }
 
             int vboBytes;
@@ -1229,7 +1225,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != normsBytes)
-                throw new ApplicationException(string.Format("Problem uploading normal buffer to VBO (normals). Tried to upload {0} bytes, uploaded {1}.", normsBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading normal buffer to VBO (normals). Tried to upload {0} bytes, uploaded {1}.", normsBytes, vboBytes));
         }
 
         /// <summary>
@@ -1243,7 +1239,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (boneIndices == null || boneIndices.Length == 0)
             {
-                throw new ArgumentException("BoneIndices must not be null or empty");
+                ThrowHelper.ThrowArgumentException("BoneIndices must not be null or empty");
             }
 
             int vboBytes;
@@ -1275,7 +1271,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ARRAY_BUFFER, boneIndicesFlat, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != indicesBytes)
-                throw new ApplicationException(string.Format("Problem uploading bone indices buffer to VBO (bone indices). Tried to upload {0} bytes, uploaded {1}.", indicesBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading bone indices buffer to VBO (bone indices). Tried to upload {0} bytes, uploaded {1}.", indicesBytes, vboBytes));
         }
 
         /// <summary>
@@ -1289,7 +1285,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (boneWeights == null || boneWeights.Length == 0)
             {
-                throw new ArgumentException("BoneWeights must not be null or empty");
+                ThrowHelper.ThrowArgumentException("BoneWeights must not be null or empty");
             }
 
             int vboBytes;
@@ -1321,7 +1317,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ARRAY_BUFFER, boneWeightsFlat, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != weightsBytes)
-                throw new ApplicationException(string.Format("Problem uploading bone weights buffer to VBO (bone weights). Tried to upload {0} bytes, uploaded {1}.", weightsBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading bone weights buffer to VBO (bone weights). Tried to upload {0} bytes, uploaded {1}.", weightsBytes, vboBytes));
 
         }
 
@@ -1336,7 +1332,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (uvs == null || uvs.Length == 0)
             {
-                throw new ArgumentException("UVs must not be null or empty");
+                ThrowHelper.ThrowArgumentException("UVs must not be null or empty");
             }
 
             int vboBytes;
@@ -1366,7 +1362,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ARRAY_BUFFER, uvsFlat, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != uvsBytes)
-                throw new ApplicationException(string.Format("Problem uploading uv buffer to VBO (uvs). Tried to upload {0} bytes, uploaded {1}.", uvsBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading uv buffer to VBO (uvs). Tried to upload {0} bytes, uploaded {1}.", uvsBytes, vboBytes));
 
         }
 
@@ -1381,7 +1377,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (colors == null || colors.Length == 0)
             {
-                throw new ArgumentException("colors must not be null or empty");
+                ThrowHelper.ThrowArgumentException("colors must not be null or empty");
             }
 
             int vboBytes;
@@ -1393,7 +1389,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ARRAY_BUFFER, colors, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != colsBytes)
-                throw new ApplicationException(string.Format("Problem uploading color buffer to VBO (colors). Tried to upload {0} bytes, uploaded {1}.", colsBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading color buffer to VBO (colors). Tried to upload {0} bytes, uploaded {1}.", colsBytes, vboBytes));
         }
 
         /// <summary>
@@ -1407,7 +1403,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         {
             if (triangleIndices == null || triangleIndices.Length == 0)
             {
-                throw new ArgumentException("triangleIndices must not be null or empty");
+                ThrowHelper.ThrowArgumentException("triangleIndices must not be null or empty");
             }
             ((MeshImp)mr).NElements = triangleIndices.Length;
             int vboBytes;
@@ -1420,7 +1416,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             gl2.BufferData(ELEMENT_ARRAY_BUFFER, triangleIndices, STATIC_DRAW);
             vboBytes = (int)gl2.GetBufferParameter(ELEMENT_ARRAY_BUFFER, BUFFER_SIZE);
             if (vboBytes != trisBytes)
-                throw new ApplicationException(string.Format("Problem uploading vertex buffer to VBO (offsets). Tried to upload {0} bytes, uploaded {1}.", trisBytes, vboBytes));
+                ThrowHelper.ThrowExternalException(string.Format("Problem uploading vertex buffer to VBO (offsets). Tried to upload {0} bytes, uploaded {1}.", trisBytes, vboBytes));
 
         }
 
@@ -1667,9 +1663,9 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 BlendOperation.Add => FUNC_ADD,
                 BlendOperation.Subtract => FUNC_SUBTRACT,
                 BlendOperation.ReverseSubtract => FUNC_REVERSE_SUBTRACT,
-                BlendOperation.Minimum => throw new NotSupportedException("MIN blending mode not supported in WebGL!"),
-                BlendOperation.Maximum => throw new NotSupportedException("MAX blending mode not supported in WebGL!"),
-                _ => throw new ArgumentOutOfRangeException($"Invalid argument: {bo}"),
+                BlendOperation.Minimum => ThrowHelper.ThrowNotSupportedException<uint>("MIN blending mode not supported in WebGL!"),
+                BlendOperation.Maximum => ThrowHelper.ThrowNotSupportedException<uint>("MAX blending mode not supported in WebGL!"),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<uint>($"Invalid argument: {bo}"),
             };
         }
 
@@ -1680,7 +1676,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 FUNC_ADD => BlendOperation.Add,
                 FUNC_SUBTRACT => BlendOperation.Subtract,
                 FUNC_REVERSE_SUBTRACT => BlendOperation.ReverseSubtract,
-                _ => throw new ArgumentOutOfRangeException($"Invalid argument: {bom}"),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<BlendOperation>($"Invalid argument: {bom}"),
             };
         }
 
@@ -1711,7 +1707,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 //    break;
                 //case Blend.InverseSourceColor2:
                 //    break;
-                _ => throw new ArgumentOutOfRangeException($"Blend mode {blend} not supported!"),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<uint>($"Blend mode {blend} not supported!"),
             };
         }
 
@@ -1731,7 +1727,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 ONE_MINUS_DST_COLOR => Blend.InverseDestinationColor,
                 CONSTANT_COLOR or CONSTANT_ALPHA => Blend.BlendFactor,
                 ONE_MINUS_CONSTANT_COLOR or ONE_MINUS_CONSTANT_ALPHA => Blend.InverseBlendFactor,
-                _ => throw new ArgumentOutOfRangeException($"Blend mode {bf} not supported!"),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<Blend>($"Blend mode {bf} not supported!"),
             };
         }
 
@@ -1755,7 +1751,8 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             {
                 case RenderState.FillMode:
                     {
-                        throw new ArgumentException("Function not available, convert your geometry to line primitives and render them using GL_LINES!");
+                        ThrowHelper.ThrowArgumentException("Function not available, convert your geometry to line primitives and render them using GL_LINES!");
+                        break;
                     }
                 case RenderState.CullMode:
                     {
@@ -1786,7 +1783,8 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                                 gl2.FrontFace(CCW);
                                 break;
                             default:
-                                throw new ArgumentOutOfRangeException(nameof(value));
+                                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value));
+                                break;
                         }
                     }
                     break;
@@ -1860,7 +1858,8 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                     gl2.BlendColor(r, g, b, a);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(renderState));
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(renderState));
+                    break;
             }
         }
 
@@ -1914,7 +1913,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                             NOTEQUAL => Compare.NotEqual,
                             GEQUAL => Compare.GreaterEqual,
                             ALWAYS => Compare.Always,
-                            _ => throw new ArgumentOutOfRangeException("depFunc", "Value " + depFunc + " not handled"),
+                            _ => ThrowHelper.ThrowArgumentOutOfRangeException<Compare>("depFunc", "Value " + depFunc + " not handled"),
                         };
                         return (uint)ret;
                     }
@@ -1979,7 +1978,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                         return (uint)uintCol.ToRgba();
                     }
                 default:
-                    throw new ArgumentOutOfRangeException("renderState");
+                    return ThrowHelper.ThrowArgumentOutOfRangeException<uint>("renderState");
             }
         }
 
@@ -1990,12 +1989,10 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <param name="texHandle">The texture handle, associated with the given texture. Should be created by the TextureManager in the RenderContext.</param>
         public void SetRenderTarget(IWritableTexture tex, ITextureHandle texHandle)
         {
-            if (tex is not WritableTexture wt)
-            {
-                throw new NotSupportedException("Blazor has no MultisampleWritableTexture support!");
-            }
+            // Blazor has no MultisampleWritableTexture support!
+            Guard.IsOfType(tex, typeof(WritableTexture), nameof(tex));
 
-            SetRenderTarget(wt, texHandle);
+            SetRenderTarget(tex as WritableTexture, texHandle);
         }
 
         /// <summary>
@@ -2032,7 +2029,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             }
 
             if (gl2.CheckFramebufferStatus(FRAMEBUFFER) != FRAMEBUFFER_COMPLETE)
-                throw new Exception($"Error creating RenderTarget: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}; Colorformat: {tex.PixelFormat.ColorFormat}");
+                ThrowHelper.ThrowExternalException($"Error creating RenderTarget: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}; Colorformat: {tex.PixelFormat.ColorFormat}");
         }
 
         /// <summary>
@@ -2069,7 +2066,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             }
 
             if (gl2.CheckFramebufferStatus(FRAMEBUFFER) != FRAMEBUFFER_COMPLETE)
-                throw new Exception($"Error creating RenderTarget: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}; Pixelformat: {tex.PixelFormat}");
+                ThrowHelper.ThrowExternalException($"Error creating RenderTarget: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}; Pixelformat: {tex.PixelFormat}");
         }
 
         /// <summary>
@@ -2118,7 +2115,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
             if (gl2.CheckFramebufferStatus(FRAMEBUFFER) != FRAMEBUFFER_COMPLETE)
             {
-                throw new Exception($"Error creating Framebuffer: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)};" +
+                ThrowHelper.ThrowExternalException($"Error creating Framebuffer: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)};" +
                     $"DepthBuffer set? {renderTarget.DepthBufferHandle != null}");
             }
         }
@@ -2162,7 +2159,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             }
 
             if (gl2.CheckFramebufferStatus(FRAMEBUFFER) != FRAMEBUFFER_COMPLETE)
-                throw new Exception($"Error creating RenderTarget IWritableArrayTexture: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}");
+                ThrowHelper.ThrowExternalException($"Error creating RenderTarget IWritableArrayTexture: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}");
         }
 
         /// <summary>
@@ -2173,7 +2170,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <param name="output">WritableTexture</param>
         public void BlitMultisample2DTextureToTexture(ITextureHandle input, ITextureHandle output, int width, int height)
         {
-            throw new NotSupportedException("Blazor has no MultisampleWritableTexture support!");
+            ThrowHelper.ThrowNotSupportedException("Blazor has no MultisampleWritableTexture support!");
         }
 
         private WebGLRenderbuffer CreateDepthRenderBuffer(int width, int height)
@@ -2231,7 +2228,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 if (texHandle != null)
                     gl2.FramebufferTexture2D(FRAMEBUFFER, DEPTH_ATTACHMENT, TEXTURE_2D, ((TextureHandle)texHandle).TexHandle, 0);
                 else
-                    throw new NullReferenceException("Texture handle is null!");
+                    ThrowHelper.ThrowArgumentNullException("Texture handle is null!");
 
                 gl2.DrawBuffers(new uint[] { NONE });
                 gl2.ReadBuffer(NONE);
@@ -2276,7 +2273,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 gl2.FramebufferTexture2D(FRAMEBUFFER, DEPTH_ATTACHMENT, TEXTURE_2D, handle, 0);
 
             if (gl2.CheckFramebufferStatus(FRAMEBUFFER) != FRAMEBUFFER_COMPLETE)
-                throw new Exception($"Error creating RenderTarget: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}");
+                ThrowHelper.ThrowExternalException($"Error creating RenderTarget: {gl2.GetError()}, {gl2.CheckFramebufferStatus(FRAMEBUFFER)}");
 
             //if (!isCurrentFbo)
             //    gl2.BindFramebuffer(FRAMEBUFFER, boundFbo);
@@ -2320,7 +2317,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
                 HardwareCapability.CanRenderDeferred => 1U,
                 HardwareCapability.CanUseGeometryShaders => 0U,
                 HardwareCapability.MaxSamples => 0U, // not supported
-                _ => throw new ArgumentOutOfRangeException(nameof(capability), capability, null),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<uint>(nameof(capability), capability, null),
             };
         }
 
@@ -2519,7 +2516,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
             }
 
             if (info != string.Empty)
-                throw new ApplicationException(info);
+                ThrowHelper.ThrowExternalException(info);
 
             var program = gl2.CreateProgram();
 

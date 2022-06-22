@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.PointCloud.Common
 {
@@ -9,7 +10,7 @@ namespace Fusee.PointCloud.Common
     /// *L*eft  - negative X axis
     /// *R*ight - positive X axis
     /// *F*ront - negative Y axis
-    /// *B*ack  - positive Y axis 
+    /// *B*ack  - positive Y axis
     /// *D*own  - negative Z axis
     /// *U*p    - positive Z axis
     ///
@@ -47,21 +48,21 @@ namespace Fusee.PointCloud.Common
         OctOrientBits = (long)(~(long)LevelBits),
     }
 
-    //  Current maximum Octree level is 19 
+    //  Current maximum Octree level is 19
     //  The entire ID denoting the Octant's zero-based level [0 (top)...18 (floor)] and its "path" is stored in a 64 bit word.
     //  The octant's depth is encoded in the most significant first seven bits as a signed 7-bit-integer. Negative
     //  depths denote invalid IDs.
-    //  Each level's octant orientation is encoded in three bits (least significant bit: *L*eft(0) / *R*ight (1), 
+    //  Each level's octant orientation is encoded in three bits (least significant bit: *L*eft(0) / *R*ight (1),
     //  medium significant bit: *F*ront (0) / *B*ack (1), most significant bit: *D*own (0) / *U*p (1))
     //  Groups of three consecutive bits start at bit 0 (LSB) reaching up to (including) bit 56. Altogether this
     //  allows to encode the octant orientation for 19 levels (= 57 bits / 3).
-    // 
+    //
     //  |   LevelBits:  7-bit signed int     |    Octant Orientation Bits. Three consecutive bits for each level     |
     //  |                                    |    level 0    |    level 1   |   ...   |   level 17   |   level 18    |
     //  |  SGN  MS                       LS  |  DU | FB | LR | DU | FB | LR |   ...   | DU | FB | LR | DU | FB | LR  |
     //  |  63 | 62 | 61 | 60 | 59 | 58 | 57  |  56 | 55 | 54 | 53 | 52 | 51 |   ...   | 05 | 04 | 03 | 02 | 01 | 00  |
     //  |  MSB                                                                                                  LSB  |
-    //  
+    //
 
 
     public struct OctantId : IEnumerable<(int, OctantOrientation)>
@@ -79,7 +80,7 @@ namespace Fusee.PointCloud.Common
             {
                 OctantOrientation oo = ooList[i];
                 if ((oo & (~OctantOrientation.LeftRightFrontBackDownUpMask)) != 0)
-                    throw new ArgumentException("Invalid octant orientation at level {i}, must be a combination of OctOr flags, i. e. in the range of [0..7]");
+                    ThrowHelper.ThrowArgumentException("Invalid octant orientation at level {i}, must be a combination of OctOr flags, i. e. in the range of [0..7]");
 
                 _id |= (long)oo;
                 i++;
@@ -110,7 +111,7 @@ namespace Fusee.PointCloud.Common
             '6' => OctantOrientation.RightBackDown,
             '7' => OctantOrientation.RightBackUp,
             'r' => OctantOrientation.LeftFrontDown,
-            _ => throw new ArgumentException(nameof(potreeLevelName))
+            _ => ThrowHelper.ThrowArgumentException<OctantOrientation>(nameof(potreeLevelName))
         };
 
         public static OctantOrientation[] PotreeNameToOctantOrientations(string potreeName)
@@ -135,7 +136,7 @@ namespace Fusee.PointCloud.Common
             OctantOrientation.RightFrontUp => '5',
             OctantOrientation.RightBackDown => '6',
             OctantOrientation.RightBackUp => '7',
-            _ => throw new ArgumentException(nameof(octOr))
+            _ => ThrowHelper.ThrowArgumentException<char>(nameof(octOr))
         };
 
         public static string OctantIdToPotreeName(OctantId octId)
@@ -168,7 +169,7 @@ namespace Fusee.PointCloud.Common
             set
             {
                 if (!(0 <= value && value <= 18))
-                    throw new ArgumentException("Maximum allowed octant level range is [0..18]");
+                    ThrowHelper.ThrowArgumentException("Maximum allowed octant level range is [0..18]");
 
                 long orients = _id & ((long)OctantHelper.OctOrientBits);
                 long lvlOn57 = ((long)value) << 57;
@@ -181,17 +182,17 @@ namespace Fusee.PointCloud.Common
             get
             {
                 if (!(0 <= level && level <= Level))
-                    throw new ArgumentException($"Current octant ID's maximum level is {Level}");
+                    ThrowHelper.ThrowArgumentException($"Current octant ID's maximum level is {Level}");
                 return ((OctantOrientation)(_id >> ((18 - level) * 3))) & OctantOrientation.LeftRightFrontBackDownUpMask;
             }
             /// Implicitly re-sets the level if exceeded
             set
             {
                 if (!(0 <= level && level <= 18))
-                    throw new ArgumentException("Maximum allowed octant level range is [0..18]");
+                    ThrowHelper.ThrowArgumentException("Maximum allowed octant level range is [0..18]");
 
                 if ((value & (~OctantOrientation.LeftRightFrontBackDownUpMask)) != 0)
-                    throw new ArgumentException("Invalid octant orientation, must be a combination of OctOr flags, i. e. in the range of [0..7]");
+                    ThrowHelper.ThrowArgumentException("Invalid octant orientation, must be a combination of OctOr flags, i. e. in the range of [0..7]");
 
                 if (level > Level)
                     Level = level;

@@ -1,6 +1,7 @@
 using Android.Content;
 using Fusee.Base.Common;
 using Fusee.Base.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.IO;
 using System.Linq;
@@ -84,7 +85,7 @@ namespace Fusee.Base.Imp.Android
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override Stream GetStream(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             return _androidContext.Assets.Open(id);
         }
@@ -97,7 +98,7 @@ namespace Fusee.Base.Imp.Android
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override bool CheckExists(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             string dir = Path.GetDirectoryName(id);
             string file = Path.GetFileName(id);
@@ -115,7 +116,7 @@ namespace Fusee.Base.Imp.Android
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override async Task<Stream> GetStreamAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             return await Task.FromResult(_androidContext.Assets.Open(id));
         }
@@ -129,7 +130,7 @@ namespace Fusee.Base.Imp.Android
         {
             return Task.Factory.StartNew(() =>
             {
-                if (id == null) throw new ArgumentNullException(nameof(id));
+                Guard.IsNotNull(id, nameof(id));
 
                 string dir = Path.GetDirectoryName(id);
                 string file = Path.GetFileName(id);

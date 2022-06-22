@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Diagnostics;
+using System;
 
 namespace Fusee.Base.Common
 {
@@ -69,7 +70,7 @@ namespace Fusee.Base.Common
                     ColorFormat.fRGB32 => 12,
                     ColorFormat.iRGBA32 => 16,
                     ColorFormat.fRGBA32 => 16,
-                    _ => throw new ArgumentOutOfRangeException(),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<int>(nameof(PixelFormat.ColorFormat)),
                 };
             }
         }

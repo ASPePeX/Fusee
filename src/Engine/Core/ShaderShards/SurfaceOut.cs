@@ -1,4 +1,5 @@
 ﻿using Fusee.Engine.Core.Effects;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 
@@ -212,7 +213,7 @@ namespace Fusee.Engine.Core.ShaderShards
             }
             else
             {
-                throw new ArgumentException($"Invalid Lighting flags: {setup}");
+                return ThrowHelper.ThrowArgumentException<ShadingModelShards>($"Invalid Lighting flags: {setup}");
             }
         }
 

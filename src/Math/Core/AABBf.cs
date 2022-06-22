@@ -2,6 +2,7 @@ using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Math.Core
 {
@@ -188,7 +189,7 @@ namespace Fusee.Math.Core
         }
 
         /// <summary>
-        /// Checks if a viewing frustum lies within or intersects this AABB.      
+        /// Checks if a viewing frustum lies within or intersects this AABB.
         /// </summary>
         /// <param name="frustum">The frustum to test against.</param>
         /// <returns>false if fully outside, true if inside or intersecting.</returns>
@@ -211,7 +212,7 @@ namespace Fusee.Math.Core
         }
 
         /// <summary>
-        /// Checks if a plane lies within or intersects this AABB.      
+        /// Checks if a plane lies within or intersects this AABB.
         /// </summary>
         /// <param name="plane">The plane to test against.</param>
         /// <returns>false if fully outside, true if inside or intersecting.</returns>
@@ -277,7 +278,7 @@ namespace Fusee.Math.Core
         /// Operator override for equality.
         /// </summary>
         /// <param name="left">The AABBf.</param>
-        /// <param name="right">The scalar value.</param>        
+        /// <param name="right">The scalar value.</param>
         public static bool operator ==(AABBf left, AABBf right)
         {
             return left.Equals(right);
@@ -300,8 +301,8 @@ namespace Fusee.Math.Core
         /// <returns></returns>
         public override bool Equals(object? obj)
         {
-            if (obj?.GetType() != typeof(AABBf)) throw new ArgumentException($"{obj} is not of Type 'AABBf'.");
-
+            Guard.IsNotNull(obj, nameof(obj));
+            Guard.IsOfType(obj, typeof(AABBf), nameof(obj));
             var other = (AABBf)obj;
             return max.Equals(other.max) && min.Equals(other.min);
         }

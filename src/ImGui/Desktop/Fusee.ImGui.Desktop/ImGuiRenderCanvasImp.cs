@@ -4,6 +4,7 @@ using Fusee.Engine.Core;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Desktop;
 using System;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.ImGuiDesktop
 {
@@ -423,7 +424,7 @@ namespace Fusee.ImGuiDesktop
 
             if (major < 2)
             {
-                throw new InvalidOperationException("You need at least OpenGL 2.0 to run this example. GLSL not supported.");
+                ThrowHelper.ThrowInvalidOperationException("You need at least OpenGL 2.0 to run this example. GLSL not supported.");
             }
 
             GL.ClearColor(25, 25, 112, byte.MaxValue);

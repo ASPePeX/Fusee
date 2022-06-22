@@ -1,4 +1,5 @@
-﻿using ProtoBuf;
+﻿using Microsoft.Toolkit.Diagnostics;
+using ProtoBuf;
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -127,7 +128,7 @@ namespace Fusee.Math.Core
                     0 => x,
                     1 => y,
                     2 => z,
-                    _ => throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a double3 type"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<double>($"Index {idx} not eligible for a double3 type"),
                 };
             }
             set
@@ -147,7 +148,8 @@ namespace Fusee.Math.Core
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a double3 type");
+                        ThrowHelper.ThrowArgumentOutOfRangeException($"Index {idx} not eligible for a double3 type");
+                        break;
                 }
             }
         }
@@ -1307,21 +1309,13 @@ namespace Fusee.Math.Core
 
             string[] strings = source.Split(new char[] { separator, '(', ')', ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (strings.Length != 3)
-                throw new FormatException("String parse for double3 did not result in exactly 3 items.");
+            Guard.IsEqualTo(strings.Length, 3, nameof(strings));
 
-            double[] doubles = new double[strings.Length];
+            var doubles = new double[strings.Length];
 
             for (int i = 0; i < strings.Length; i++)
             {
-                try
-                {
-                    doubles[i] = double.Parse(strings[i], provider);
-                }
-                catch
-                {
-                    throw new FormatException();
-                }
+                doubles[i] = double.Parse(strings[i], provider);
             }
 
             return new double3(doubles[0], doubles[1], doubles[2]);

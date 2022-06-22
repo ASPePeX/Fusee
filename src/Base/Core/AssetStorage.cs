@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Base.Core
 {
@@ -227,7 +228,7 @@ namespace Fusee.Base.Core
         public void RegisterAssetProvider(IAssetProvider assetProvider)
         {
             if (_providers.Contains(assetProvider))
-                throw new InvalidOperationException("Asset Provider already registered " + assetProvider);
+                ThrowHelper.ThrowInvalidOperationException("Asset Provider already registered " + assetProvider);
             _providers.Add(assetProvider);
         }
 
@@ -253,7 +254,7 @@ namespace Fusee.Base.Core
         {
             if (source.GetType().GetCustomAttributes(true).OfType<ProtoBuf.ProtoContractAttribute>() == null)
             {
-                throw new InvalidOperationException($"DeepCopy: ProtoBuf.ProtoContractAttribute is not defined on '{source.GetType().Name}'!");
+                ThrowHelper.ThrowInvalidOperationException($"DeepCopy: ProtoBuf.ProtoContractAttribute is not defined on '{source.GetType().Name}'!");
             }
 
             _ = new MemoryStream();

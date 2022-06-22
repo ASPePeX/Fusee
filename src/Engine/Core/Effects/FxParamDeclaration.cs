@@ -1,3 +1,4 @@
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Diagnostics;
 
@@ -75,15 +76,13 @@ namespace Fusee.Engine.Core.Effects
         /// <returns></returns>
         public bool SetValue(object val)
         {
-            if (ParamType != typeof(T))
-                throw new ArgumentException($"{val} has the wrong Type!");
-            else
-            {
-                if (Value != null && Value.Equals((T)val))
-                    return false;
-                Value = (T)val;
-                return true;
-            }
+            Guard.IsOfType(ParamType, typeof(T), nameof(ParamType));
+
+            if (Value != null && Value.Equals((T)val))
+                return false;
+            Value = (T)val;
+            return true;
+
         }
     }
 }

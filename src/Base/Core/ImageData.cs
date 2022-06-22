@@ -1,6 +1,7 @@
 ﻿using Fusee.Base.Common;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Base.Core
 {
@@ -156,7 +157,7 @@ namespace Fusee.Base.Core
                             }
                         }
                         ,
-                        _ => throw new ArgumentOutOfRangeException(nameof(src), "Unknown source pixel format to copy to RGBA"),
+                        _ => ThrowHelper.ThrowArgumentOutOfRangeException<CopyFunc>(nameof(src), "Unknown source pixel format to copy to RGBA"),
                     },
                     ColorFormat.RGB => src.PixelFormat.ColorFormat switch
                     {
@@ -182,7 +183,7 @@ namespace Fusee.Base.Core
                             }
                         }
                         ,
-                        _ => throw new ArgumentOutOfRangeException(nameof(src), "Unknown source pixel format to copy to RGB"),
+                        _ => ThrowHelper.ThrowArgumentOutOfRangeException<CopyFunc> (nameof(src), "Unknown source pixel format to copy to RGB"),
                     },
                     ColorFormat.Intensity => src.PixelFormat.ColorFormat switch
                     {
@@ -212,9 +213,9 @@ namespace Fusee.Base.Core
                             }
                         }
                         ,
-                        _ => throw new ArgumentOutOfRangeException(nameof(src), "Unknown source pixel format to copy to RGB"),
+                        _ => ThrowHelper.ThrowArgumentOutOfRangeException<CopyFunc>(nameof(src), "Unknown source pixel format to copy to RGB"),
                     },
-                    _ => throw new ArgumentOutOfRangeException(ToString(), "Unknown destination pixel format"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<CopyFunc>(ToString(), "Unknown destination pixel format"),
                 };
             } // end else block
 
@@ -247,11 +248,11 @@ namespace Fusee.Base.Core
         {
             if ((xSrc + width) > Width)
             {
-                throw new ArgumentOutOfRangeException("Cannot get ScanLineEnumerator due to exceeding ImageData Width=" + Width + ". Choose xSrc+width to be smaller than Width of ImageData");
+                ThrowHelper.ThrowArgumentOutOfRangeException("Cannot get ScanLineEnumerator due to exceeding ImageData Width=" + Width + ". Choose xSrc+width to be smaller than Width of ImageData");
             }
             if ((ySrc + height) > Height)
             {
-                throw new ArgumentOutOfRangeException("Cannot get ScanLineEnumerator due to exceeding ImageData Height=" + Height + ". Choose ySrc+height to be smaller than Height of ImageData");
+                ThrowHelper.ThrowArgumentOutOfRangeException("Cannot get ScanLineEnumerator due to exceeding ImageData Height=" + Height + ". Choose ySrc+height to be smaller than Height of ImageData");
             }
 
             for (int i = ySrc; i < ySrc + height; i++)

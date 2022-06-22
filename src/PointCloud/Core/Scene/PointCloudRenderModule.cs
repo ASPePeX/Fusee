@@ -1,6 +1,7 @@
 using Fusee.Base.Core;
 using Fusee.Engine.Core;
 using Fusee.Engine.Core.Scene;
+using Microsoft.Toolkit.Diagnostics;
 using Fusee.Xene;
 using System;
 
@@ -37,7 +38,7 @@ namespace Fusee.PointCloud.Core.Scene
         public void UpdateContext(RenderContext rc)
         {
             if (rc == null)
-                throw new ArgumentNullException(nameof(rc));
+                ThrowHelper.ThrowArgumentNullException(nameof(rc));
 
             if (rc != _rc)
             {
@@ -52,7 +53,7 @@ namespace Fusee.PointCloud.Core.Scene
         public void UpdateState(RendererState state)
         {
             if (state == null)
-                throw new ArgumentNullException(nameof(state));
+                ThrowHelper.ThrowArgumentNullException(nameof(state));
 
             if (state != _state)
             {

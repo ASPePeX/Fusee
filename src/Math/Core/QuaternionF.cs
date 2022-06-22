@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Math.Core
 {
@@ -114,7 +115,7 @@ namespace Fusee.Math.Core
                     1 => y,
                     2 => z,
                     3 => w,
-                    _ => throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a Quaternion type"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<float>($"Index {idx} not eligible for a Quaternion type"),
                 };
             }
             set
@@ -138,7 +139,8 @@ namespace Fusee.Math.Core
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException($"Index {idx} not eligible for a Quaternion type");
+                        ThrowHelper.ThrowArgumentOutOfRangeException($"Index {idx} not eligible for a Quaternion type");
+                        break;
                 }
             }
         }

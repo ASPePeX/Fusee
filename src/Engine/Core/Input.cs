@@ -1,4 +1,5 @@
 ﻿using Fusee.Engine.Common;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -311,8 +312,8 @@ namespace Fusee.Engine.Core
         /// <param name="creator"></param>
         public void RegisterInputDeviceType(MatchFunc match, CreatorFunc creator)
         {
-            if (match == null) throw new ArgumentNullException(nameof(match));
-            if (creator == null) throw new ArgumentNullException(nameof(creator));
+            if (match == null) ThrowHelper.ThrowArgumentNullException(nameof(match));
+            if (creator == null) ThrowHelper.ThrowArgumentNullException(nameof(creator));
 
             _specialDeviceCreators.Add(new SpecialDeviceCreator { Match = match, Creator = creator });
 
@@ -379,7 +380,7 @@ namespace Fusee.Engine.Core
         public void AddInputDriverImp(IInputDriverImp inputDriver)
         {
             if (inputDriver == null)
-                throw new ArgumentNullException(nameof(inputDriver));
+                ThrowHelper.ThrowArgumentNullException(nameof(inputDriver));
 
             foreach (var deviceImp in inputDriver.Devices)
             {
@@ -407,12 +408,12 @@ namespace Fusee.Engine.Core
 
         private void OnNewDeviceImpConnected(object sender, NewDeviceImpConnectedArgs args)
         {
-            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            Guard.IsNotNull(sender, nameof(sender));
+            Guard.IsNotNull(args, nameof(args));
+            Guard.IsNotNull(args.InputDeviceImp, nameof(args.InputDeviceImp));
+            Guard.IsOfType(sender, typeof(IInputDriverImp), nameof(sender)); // Device disconnecting from unknown driver
 
-            if (sender is not IInputDriverImp driver) throw new InvalidOperationException("Device connecting from unknown driver " + sender.ToString());
-
-            if (args == null || args.InputDeviceImp == null)
-                throw new ArgumentNullException(nameof(args), "Device or InputDeviceImp must not be null");
+            var driver = sender as IInputDriverImp;
 
             string deviceKey = driver.DriverId + "_" + args.InputDeviceImp.Id;
             if (_inputDevices.TryGetValue(deviceKey, out InputDevice existingDevice))
@@ -431,8 +432,10 @@ namespace Fusee.Engine.Core
 
         private void OnDeviceImpDisconnected(object sender, DeviceImpDisconnectedArgs args)
         {
-            if (sender == null) throw new ArgumentNullException(nameof(sender));
-            if (sender is not IInputDriverImp driver) throw new InvalidOperationException("Device disconnecting from unknown driver " + sender.ToString());
+            Guard.IsNotNull(sender, nameof(sender));
+            Guard.IsOfType(sender, typeof(IInputDriverImp), nameof(sender)); // Device disconnecting from unknown driver
+
+            var driver = sender as IInputDriverImp;
 
             string deviceKey = driver.DriverId + "_" + args.Id;
             if (_inputDevices.TryGetValue(deviceKey, out InputDevice existingDevice))
@@ -441,7 +444,7 @@ namespace Fusee.Engine.Core
             }
             else
             {
-                throw new InvalidOperationException("Driver " + driver.DriverId + " trying to disconnect unknown device " + args.Id);
+                ThrowHelper.ThrowInvalidOperationException("Driver " + driver.DriverId + " trying to disconnect unknown device " + args.Id);
             }
 
             // Bubble up event to user code

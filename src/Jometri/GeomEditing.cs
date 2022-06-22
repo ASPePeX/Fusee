@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Jometri
 {
@@ -26,7 +27,7 @@ namespace Fusee.Jometri
             for (var i = 0; i < adjacentVertices.Count; i++)
             {
                 if (adjacentVertices[i].Handle == q) break;
-                if (i == adjacentVertices.Count - 1) throw new ArgumentException("Vertices with Handle q=" + q + " and p=" + p + " are not adjacent!");
+                if (i == adjacentVertices.Count - 1) ThrowHelper.ThrowArgumentException("Vertices with Handle q=" + q + " and p=" + p + " are not adjacent!");
             }
 
             var newVertex = new Vertex(geometry.CreateVertHandleId(), pos);
@@ -112,7 +113,7 @@ namespace Fusee.Jometri
             var face = geometry.GetFaceToInsertDiag(p, q, ref pStartHe, ref qStartHe);
 
             if (geometry.IsVertexAdjacentToVertex(p, q, pStartHe, qStartHe))
-                throw new ArgumentException("A diagonal can't be inserted between adjacent Vertices!");
+                ThrowHelper.ThrowArgumentException("A diagonal can't be inserted between adjacent Vertices!");
 
             var newFromP = new HalfEdge(geometry.CreateHalfEdgeHandleId());
             var newFromQ = new HalfEdge(geometry.CreateHalfEdgeHandleId());
@@ -259,8 +260,8 @@ namespace Fusee.Jometri
         /// <returns>Returns the geometry with edited faces.</returns>
         public static Geometry InsetFace(this Geometry geometry, int faceHandle, float insetOffset)
         {
-            if (insetOffset >= 1) throw new ArgumentException("insetOffset can not be greater or equal to 1.");
-            if (insetOffset <= 0) throw new ArgumentException("insetOffset can not be smaller or equal to 0.");
+            if (insetOffset >= 1) ThrowHelper.ThrowArgumentException("insetOffset can not be greater or equal to 1.");
+            if (insetOffset <= 0) ThrowHelper.ThrowArgumentException("insetOffset can not be smaller or equal to 0.");
 
             var face = geometry.GetFaceByHandle(faceHandle);
             var allFaceVertices = geometry.GetFaceVertices(faceHandle).ToList();
@@ -319,7 +320,7 @@ namespace Fusee.Jometri
                 edge2Twin.IncidentFace = face.Handle;
                 newFace.FaceData.FaceNormal = face.FaceData.FaceNormal;
 
-                //write changes 
+                //write changes
                 geometry.DictVertices.Add(newVertex.Handle, newVertex);
                 geometry.DictFaces.Add(newFace.Handle, newFace);
                 geometry.DictHalfEdges.Add(edge1.Handle, edge1);

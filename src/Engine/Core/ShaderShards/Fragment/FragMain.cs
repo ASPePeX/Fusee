@@ -1,6 +1,7 @@
 using Fusee.Engine.Common;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core.ShaderShards.Fragment
 {
@@ -69,7 +70,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                     ShadingModel.Glossy => 5,
                     ShadingModel.BRDF => 1,
                     ShadingModel.Edl => 6,
-                    _ => throw new InvalidOperationException("Invalid ShadingModel!"),
+                    _ => ThrowHelper.ThrowInvalidOperationException<int>("Invalid ShadingModel!"),
                 };
                 switch (i)
                 {
@@ -135,7 +136,8 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                                     fragMainBody.Add($"{texName} = vec4(EDLStrength, encodedNeighbourPx, 0.0, 0.0);");
                                     break;
                                 default:
-                                    throw new InvalidOperationException("Invalid ShadingModel.");
+                                    ThrowHelper.ThrowInvalidOperationException("Invalid ShadingModel.");
+                                    break;
                             }
                             break;
                         }

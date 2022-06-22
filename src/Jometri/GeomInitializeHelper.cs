@@ -1,7 +1,7 @@
 ﻿using Fusee.Math.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Jometri
 {
@@ -349,7 +349,7 @@ namespace Fusee.Jometri
             }
 
             if (newHeTargetVert == default)
-                throw new ArgumentException("Target vertex not found!");
+                ThrowHelper.ThrowArgumentException("Target vertex not found!");
 
             var heStartingAtOldV = geometry.GetVertexStartingHalfEdges(halfEdge.OriginVertex).ToList();
 

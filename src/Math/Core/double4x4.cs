@@ -1,3 +1,4 @@
+using Microsoft.Toolkit.Diagnostics;
 using ProtoBuf;
 using System;
 using System.Globalization;
@@ -395,7 +396,7 @@ namespace Fusee.Math.Core
                     1 => Row2[j],
                     2 => Row3[j],
                     3 => Row4[j],
-                    _ => throw new ArgumentOutOfRangeException($"Index {i},{j} not eligible for a double4x4 type"),
+                    _ => ThrowHelper.ThrowArgumentOutOfRangeException<double>($"Index {i},{j} not eligible for a double4x4 type"),
                 };
             }
             set
@@ -419,7 +420,8 @@ namespace Fusee.Math.Core
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException($"Index {i},{j} not eligible for a double4x4 type");
+                        ThrowHelper.ThrowArgumentOutOfRangeException($"Index {i},{j} not eligible for a double4x4 type");
+                        break;
                 }
             }
         }
@@ -965,15 +967,15 @@ namespace Fusee.Math.Core
             double4x4 result;
 
             if (fovy <= 0 || fovy > System.Math.PI)
-                throw new ArgumentOutOfRangeException(nameof(fovy));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(fovy));
             if (aspect <= 0)
-                throw new ArgumentOutOfRangeException(nameof(aspect));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(aspect));
             if (zNear <= 0)
-                throw new ArgumentOutOfRangeException(nameof(zNear));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zNear));
             if (zFar <= 0)
-                throw new ArgumentOutOfRangeException(nameof(zFar));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zFar));
             if (zNear >= zFar)
-                throw new ArgumentOutOfRangeException(nameof(zNear));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zNear));
 
             double yMax = zNear * System.Math.Tan(0.5f * fovy);
             double yMin = -yMax;
@@ -1019,11 +1021,11 @@ namespace Fusee.Math.Core
             double4x4 result;
 
             if (zNear <= 0)
-                throw new ArgumentOutOfRangeException(nameof(zNear));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zNear));
             if (zFar <= 0)
-                throw new ArgumentOutOfRangeException(nameof(zFar));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zFar));
             if (zNear >= zFar)
-                throw new ArgumentOutOfRangeException(nameof(zNear));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zNear));
 
             double x = (2.0 * zNear) / (right - left);
             double y = (2.0 * zNear) / (top - bottom);
@@ -1064,11 +1066,11 @@ namespace Fusee.Math.Core
             double4x4 result;
 
             if (zNear <= 0)
-                throw new ArgumentOutOfRangeException(nameof(zNear));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zNear));
             if (zFar <= 0)
-                throw new ArgumentOutOfRangeException(nameof(zFar));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zFar));
             if (zNear >= zFar)
-                throw new ArgumentOutOfRangeException(nameof(zNear));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(zNear));
 
             double x = (2.0 * zNear) / (right - left);
             double y = (2.0 * zNear) / (top - bottom);
@@ -1532,7 +1534,7 @@ namespace Fusee.Math.Core
         /// <summary>
         /// Checks if this matrix is invertible.
         /// </summary>
-        /// <param name="mat">The matrix.</param>       
+        /// <param name="mat">The matrix.</param>
         public static bool IsInvertable(double4x4 mat)
         {
             return mat.Determinant != 0;
@@ -1542,7 +1544,7 @@ namespace Fusee.Math.Core
         /// Checks if this matrix is invertible.
         /// </summary>
         /// <param name="mat">The matrix.</param>
-        /// <param name="det">The determinant of the matrix.</param>       
+        /// <param name="det">The determinant of the matrix.</param>
         public static bool IsInvertable(double4x4 mat, out double det)
         {
             det = mat.Determinant;
@@ -1695,7 +1697,7 @@ namespace Fusee.Math.Core
 
         //            if (System.Math.Abs(detM.GetElement(0)) < double.Epsilon)
         //            {
-        //                throw new InvalidOperationException("Matrix is singular and cannot be inverted.");
+        //                ThrowHelper.ThrowInvalidOperationException("Matrix is singular and cannot be inverted.");
         //            }
 
         //            var adjSignMask = Vector128.Create(1.0f, -1.0f, -1.0f, 1.0f);
@@ -1752,7 +1754,7 @@ namespace Fusee.Math.Core
 
             if (System.Math.Abs(det) < double.Epsilon)
             {
-                throw new InvalidOperationException("Matrix is singular and cannot be inverted.");
+                ThrowHelper.ThrowInvalidOperationException("Matrix is singular and cannot be inverted.");
             }
 
             double invDet = 1.0f / det;
@@ -1901,7 +1903,7 @@ namespace Fusee.Math.Core
 
         #endregion Transpose
 
-        #region Transform        
+        #region Transform
 
         /// <summary>
         /// Transforms a given vector by a matrix via matrix*vector (Postmultiplication of the vector).
@@ -2405,7 +2407,7 @@ namespace Fusee.Math.Core
 
         /// <summary>
         /// Checks whether row three (the projection part) of the matrix is equal to (0, 0, 0, 1). If this is the case the matrix is affine.
-        /// </summary>       
+        /// </summary>
         public bool IsAffine =>
                 // Column order notation
                 (Row4 == double4.UnitW);
@@ -2513,7 +2515,7 @@ namespace Fusee.Math.Core
             string[] strings = source.Split(new char[] { separator, '(', ')', ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (strings.Length != 16)
-                throw new FormatException("String parse for double4x4 did not result in exactly 16 items.");
+                ThrowHelper.ThrowFormatException("String parse for double4x4 did not result in exactly 16 items.");
 
             double[] doubles = new double[strings.Length];
 
@@ -2525,7 +2527,7 @@ namespace Fusee.Math.Core
                 }
                 catch
                 {
-                    throw new FormatException();
+                    ThrowHelper.ThrowFormatException();
                 }
             }
 

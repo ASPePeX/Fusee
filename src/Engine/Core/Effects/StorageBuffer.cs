@@ -1,5 +1,7 @@
 ﻿using Fusee.Engine.Common;
 using System;
+using Microsoft.Toolkit.Diagnostics;
+
 
 namespace Fusee.Engine.Core.Effects
 {
@@ -35,7 +37,7 @@ namespace Fusee.Engine.Core.Effects
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -75,7 +77,7 @@ namespace Fusee.Engine.Core.Effects
                 _data = data;
             }
             else
-                throw new ArgumentOutOfRangeException($"Data array has the wrong length. The length has to be {_count}!");
+                ThrowHelper.ThrowArgumentOutOfRangeException($"Data array has the wrong length. The length has to be {_count}!");
             _rc.ContextImplementor.StorageBufferSetData(this, _data);
         }
 
@@ -85,7 +87,7 @@ namespace Fusee.Engine.Core.Effects
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Dispose()
         {
@@ -94,7 +96,7 @@ namespace Fusee.Engine.Core.Effects
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="disposing"></param>
         protected virtual void Dispose(bool disposing)

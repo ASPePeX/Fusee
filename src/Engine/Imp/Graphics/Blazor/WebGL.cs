@@ -1,5 +1,6 @@
 using Fusee.Base.Imp.Blazor;
 using Microsoft.JSInterop;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 
 namespace Fusee.Engine.Imp.Graphics.Blazor
@@ -1110,7 +1111,7 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
 
         public object GetShaderParameter(WebGLShader shader, uint pname)
         {
-            throw new NotSupportedException("Not yet properly implementend");
+            return ThrowHelper.ThrowNotSupportedException<object>("Not yet properly implementend");
         }
 
         public WebGLShaderPrecisionFormat GetShaderPrecisionFormat(uint shadertype, uint precisiontype)

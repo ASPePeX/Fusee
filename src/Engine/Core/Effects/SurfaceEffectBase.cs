@@ -2,6 +2,7 @@ using Fusee.Engine.Common;
 using Fusee.Engine.Core.Scene;
 using Fusee.Engine.Core.ShaderShards;
 using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace Fusee.Engine.Core.Effects
 
         //================== Surface Shard IN ==========================//
         /// <summary>
-        /// User-defined input struct. Must derive from <see cref="DiffuseInput"/>. 
+        /// User-defined input struct. Must derive from <see cref="DiffuseInput"/>.
         /// Used in the <see cref="SurfOutFragMethod"/> to modify the parameters of the chosen <see cref="SurfaceOutput"/>.
         /// </summary>
         public SurfaceInput SurfaceInput { get; set; }
@@ -259,10 +260,10 @@ namespace Fusee.Engine.Core.Effects
                 }
 
                 if (shaderAttribute == null)
-                    throw new ArgumentException("Property has no ShaderAttribute!");
+                    ThrowHelper.ThrowArgumentException("Property has no ShaderAttribute!");
 
                 if (shardAttribute == null)
-                    throw new ArgumentException("Property has no ShardAttribute!");
+                    ThrowHelper.ThrowArgumentException("Property has no ShardAttribute!");
 
                 switch (shardAttribute.ShardCategory)
                 {
@@ -284,7 +285,7 @@ namespace Fusee.Engine.Core.Effects
                         if (prop.PropertyType == typeof(string))
                             HandleShard(shaderAttribute.ShaderCategory, shardAttribute, (string)prop.GetValue(this));
                         else
-                            throw new Exception($"{t.Name} ShaderEffect: Property {prop.Name} does not contain a valid shard.");
+                            ThrowHelper.ThrowExternalException($"{t.Name} ShaderEffect: Property {prop.Name} does not contain a valid shard.");
                         continue;
                     case ShardCategory.Struct:
                         HandleStruct(shaderAttribute.ShaderCategory, prop.PropertyType);
@@ -299,7 +300,8 @@ namespace Fusee.Engine.Core.Effects
                         HandleUniform(shaderAttribute.ShaderCategory, prop.Name, prop.PropertyType);
                         continue;
                     default:
-                        throw new ArgumentException($"Unknown shard category: {shardAttribute.ShardCategory}");
+                        ThrowHelper.ThrowArgumentException($"Unknown shard category: {shardAttribute.ShardCategory}");
+                        break;
 
                 }
             }
@@ -328,15 +330,16 @@ namespace Fusee.Engine.Core.Effects
                     }
                 }
                 if (shaderAttribute == null)
-                    throw new ArgumentException("Field has no ShaderAttribute!");
+                    ThrowHelper.ThrowArgumentException("Field has no ShaderAttribute!");
 
                 if (shardAttribute == null)
-                    throw new ArgumentException("Field has no ShardAttribute!");
+                    ThrowHelper.ThrowArgumentException("Field has no ShardAttribute!");
 
                 switch (shardAttribute.ShardCategory)
                 {
                     case ShardCategory.Uniform:
-                        throw new Exception($"{t.Name} ShaderEffect: Field {field.Name} must be a Property that calls SetFxParam in the setter.");
+                        ThrowHelper.ThrowExternalException($"{t.Name} ShaderEffect: Field {field.Name} must be a Property that calls SetFxParam in the setter.");
+                        break;
                     case ShardCategory.InternalUniform:
                         {
                             var paramDcl = BuildFxParamDecl(field);
@@ -358,7 +361,7 @@ namespace Fusee.Engine.Core.Effects
                             HandleShard(shaderAttribute.ShaderCategory, shardAttribute, val);
                         }
                         else
-                            throw new Exception($"{t.Name} ShaderEffect: Field {field.Name} does not contain a valid shard.");
+                            ThrowHelper.ThrowInvalidDataException($"{t.Name} ShaderEffect: Field {field.Name} does not contain a valid shard.");
                         continue;
                     case ShardCategory.Struct:
                         HandleStruct(shaderAttribute.ShaderCategory, field.FieldType);

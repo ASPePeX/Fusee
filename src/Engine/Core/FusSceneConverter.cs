@@ -7,6 +7,7 @@ using Fusee.Math.Core;
 using Fusee.Serialization;
 using Fusee.Serialization.V1;
 using Fusee.Xene;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -783,7 +784,7 @@ namespace Fusee.Engine.Core
 
         private async Task<Effect> GetEffectForMat(FusMaterialBase m, ShadingModel lightingSetup, float shininess, float specularStrength, float roughness)
         {
-            Effect sfx;
+            Effect sfx = null;
             var texSetup = TextureSetup.NoTextures;
             if (m.Albedo.Texture != null && m.Albedo.Texture != "")
                 texSetup |= TextureSetup.AlbedoTex;
@@ -843,7 +844,7 @@ namespace Fusee.Engine.Core
                     sfx = MakeEffect.FromDiffuseSpecular(m.Albedo.Color, roughness, shininess, specularStrength, emissive.rgb);
                 }
                 else
-                    throw new ArgumentException("Material couldn't be resolved.");
+                    ThrowHelper.ThrowArgumentException("Material couldn't be resolved.");
             }
 
             else if (lightingSetup == ShadingModel.DiffuseOnly)
@@ -897,7 +898,7 @@ namespace Fusee.Engine.Core
                     sfx = MakeEffect.FromDiffuse(m.Albedo.Color, roughness, emissive.rgb);
                 }
                 else
-                    throw new System.ArgumentException("Material couldn't be resolved.");
+                    ThrowHelper.ThrowArgumentException("Material couldn't be resolved.");
             }
 
             else if (lightingSetup == ShadingModel.Glossy)
@@ -1243,7 +1244,7 @@ namespace Fusee.Engine.Core
                 _currentNode.AddComponent(mat);
             }
             else
-                throw new InvalidOperationException("Invalid ShadingModel!");
+                ThrowHelper.ThrowInvalidOperationException("Invalid ShadingModel!");
         }
 
         /// <summary>

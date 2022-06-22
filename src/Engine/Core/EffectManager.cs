@@ -3,6 +3,7 @@ using Fusee.Engine.Core.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core
 {
@@ -31,7 +32,8 @@ namespace Fusee.Engine.Core
                     _rc.UpdateParameterInCompiledEffect(senderSF, args.ChangedUniformHash, args.ChangedUniformValue);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"EffectChanged event called with unknown arguments: {args}, calling Effect: {sender as Effect}");
+                    ThrowHelper.ThrowArgumentOutOfRangeException($"EffectChanged event called with unknown arguments: {args}, calling Effect: {sender as Effect}");
+                    break;
             }
         }
 

@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Base.Imp.Desktop
 {
@@ -45,7 +46,7 @@ namespace Fusee.Base.Imp.Desktop
                 //Convert ImageSharp's format into a byte array, so we can use it with OpenGL.
                 var pixels = new byte[bytesPerPixel * image.Width * image.Height];
 
-                ImageData img;
+                ImageData img = null;
 
                 switch (bitsPerPixel)
                 {
@@ -90,7 +91,8 @@ namespace Fusee.Base.Imp.Desktop
                             break;
                         }
                     default:
-                        throw new ArgumentException($"{bitsPerPixel} Bits per pixel not supported!");
+                        ThrowHelper.ThrowArgumentException($"{bitsPerPixel} Bits per pixel not supported!");
+                        break;
                 }
 
                 Array.Copy(pixels, img.PixelData, pixels.Length);

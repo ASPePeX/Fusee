@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Diagnostics;
+using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -616,7 +617,7 @@ namespace Fusee.Math.Core
             string[] strings = source.Split(new char[] { separator, '(', ')', ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (strings.Length != 9)
-                throw new FormatException("String parse for double3x3 did not result in exactly 9 items.");
+                ThrowHelper.ThrowFormatException("String parse for double3x3 did not result in exactly 9 items.");
 
             double[] doubles = new double[strings.Length];
 
@@ -628,7 +629,7 @@ namespace Fusee.Math.Core
                 }
                 catch
                 {
-                    throw new FormatException();
+                    ThrowHelper.ThrowFormatException();
                 }
             }
 

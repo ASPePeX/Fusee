@@ -1,4 +1,5 @@
 using Fusee.Engine.Common;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Fusee.Engine.Core
 
         internal InputDevice(IInputDeviceImp inpDeviceImp)
         {
-            _inpDevImp = inpDeviceImp ?? throw new ArgumentNullException(nameof(inpDeviceImp));
+            Guard.IsNotNull(inpDeviceImp, nameof(inpDeviceImp));
             _isConnected = true;
 
             #region Handle Axes
@@ -105,7 +106,7 @@ namespace Fusee.Engine.Core
         private void OnImpButtonValueChanged(object sender, ButtonValueChangedArgs args)
         {
             if (!_buttonsToListen.ContainsKey(args.Button.Id))
-                throw new InvalidOperationException($"Unknown Button {args.Button.Name} ({args.Button.Id})");
+                ThrowHelper.ThrowInvalidOperationException($"Unknown Button {args.Button.Name} ({args.Button.Id})");
 
             // Just save the information about the changed value. All other handling including
             // firing the user event is done in PreRender.
@@ -115,7 +116,7 @@ namespace Fusee.Engine.Core
         private void OnImpAxisValueChanged(object sender, AxisValueChangedArgs args)
         {
             if (!_axesToListen.ContainsKey(args.Axis.Id))
-                throw new InvalidOperationException($"Unknown Axis {args.Axis.Name} ({args.Axis.Id})");
+                ThrowHelper.ThrowInvalidOperationException($"Unknown Axis {args.Axis.Name} ({args.Axis.Id})");
 
             _axesToListen[args.Axis.Id] = args.Value;
             AxisValueChanged?.Invoke(this, args);
@@ -125,8 +126,10 @@ namespace Fusee.Engine.Core
 
         internal void Reconnect(IInputDeviceImp deviceImp)
         {
-            if (_isConnected) throw new InvalidOperationException($"Cannot reconnect already connected input device (connected to {_inpDevImp.Desc}). Disconnect first.");
-            _inpDevImp = deviceImp ?? throw new ArgumentNullException(nameof(deviceImp));
+            if (_isConnected) ThrowHelper.ThrowInvalidOperationException($"Cannot reconnect already connected input device (connected to {_inpDevImp.Desc}). Disconnect first.");
+            Guard.IsNotNull(deviceImp, nameof(deviceImp));
+
+            _inpDevImp = deviceImp;
             _inpDevImp.AxisValueChanged += OnImpAxisValueChanged;
             _inpDevImp.ButtonValueChanged += OnImpButtonValueChanged;
 
@@ -239,7 +242,7 @@ namespace Fusee.Engine.Core
             if (_axes.TryGetValue(axisId, out AxisDescription desc))
                 return desc;
 
-            throw new InvalidOperationException($"Cannot retrieve axis information for unknown axis {axisId}.");
+            return ThrowHelper.ThrowInvalidOperationException<AxisDescription>($"Cannot retrieve axis information for unknown axis {axisId}.");
         }
 
         /// <summary>
@@ -291,7 +294,7 @@ namespace Fusee.Engine.Core
             if (_axesToListen.TryGetValue(axisId, out value))
                 return value;
 
-            throw new InvalidOperationException($"Axis Id {axisId} not supported by device {_inpDevImp.Desc}.");
+            return ThrowHelper.ThrowInvalidOperationException<float>($"Axis Id {axisId} not supported by device {_inpDevImp.Desc}.");
         }
 
         /// <summary>
@@ -316,7 +319,7 @@ namespace Fusee.Engine.Core
             if (_axes.ContainsKey(axisId))
                 return _axes[axisId].Deadzone;
 
-            throw new InvalidOperationException($"Axis Id {axisId} not supported by device {_inpDevImp.Desc}.");
+            return ThrowHelper.ThrowInvalidOperationException<float>($"Axis Id {axisId} not supported by device {_inpDevImp.Desc}.");
         }
 
         private bool TryGetPolledAxis(int iAxisId, out float value)
@@ -368,7 +371,7 @@ namespace Fusee.Engine.Core
             if (_buttons.TryGetValue(buttonId, out ButtonDescription desc))
                 return desc;
 
-            throw new InvalidOperationException($"Cannot retrieve button information for unknown button {buttonId}.");
+            return ThrowHelper.ThrowInvalidOperationException<ButtonDescription>($"Cannot retrieve button information for unknown button {buttonId}.");
         }
 
         /// <summary>
@@ -391,7 +394,7 @@ namespace Fusee.Engine.Core
                 return btnState;
             }
 
-            throw new InvalidOperationException($"Button Id {buttonId} not supported by device {_inpDevImp.Desc}.");
+            return ThrowHelper.ThrowInvalidOperationException<bool>($"Button Id {buttonId} not supported by device {_inpDevImp.Desc}.");
         }
 
         /// <summary>
@@ -405,7 +408,7 @@ namespace Fusee.Engine.Core
         /// </returns>
         public bool IsButtonDown(int buttonId)
         {
-            if (!_buttons.ContainsKey(buttonId)) throw new InvalidOperationException($"IsButtonDown called for unknown button {buttonId}.");
+            if (!_buttons.ContainsKey(buttonId)) ThrowHelper.ThrowInvalidOperationException($"IsButtonDown called for unknown button {buttonId}.");
 
             return _buttonsDown.Contains(buttonId);
         }
@@ -421,7 +424,7 @@ namespace Fusee.Engine.Core
         /// </returns>
         public bool IsButtonUp(int buttonId)
         {
-            if (!_buttons.ContainsKey(buttonId)) throw new InvalidOperationException($"IsButtonDown called for unknown button {buttonId}.");
+            if (!_buttons.ContainsKey(buttonId)) ThrowHelper.ThrowInvalidOperationException($"IsButtonDown called for unknown button {buttonId}.");
 
             return _buttonsUp.Contains(buttonId);
         }
@@ -473,7 +476,7 @@ namespace Fusee.Engine.Core
         public void RegisterCalculatedAxis(AxisDescription calculatedAxisDescription, AxisValueCalculator calculator, float initialValue = 0)
         {
             if (calculatedAxisDescription.Id < _nextAxisId)
-                throw new InvalidOperationException($"Invalid Id for calculated axis '{calculatedAxisDescription.Name}'. Id must be bigger or equal to {_nextAxisId}.");
+                ThrowHelper.ThrowInvalidOperationException($"Invalid Id for calculated axis '{calculatedAxisDescription.Name}'. Id must be bigger or equal to {_nextAxisId}.");
 
             _nextAxisId = calculatedAxisDescription.Id;
 
@@ -518,7 +521,7 @@ namespace Fusee.Engine.Core
         {
             if (!_axes.TryGetValue(origAxisId, out AxisDescription origAxisDesc))
             {
-                throw new InvalidOperationException($"Axis Id {origAxisId} is not known. Cannot register derived axis based on unknown axis.");
+                ThrowHelper.ThrowInvalidOperationException($"Axis Id {origAxisId} is not known. Cannot register derived axis based on unknown axis.");
             }
 
             //switch (origAxisDesc.Bounded)
@@ -536,7 +539,7 @@ namespace Fusee.Engine.Core
             {
                 if (!_buttons.TryGetValue(triggerButtonId, out ButtonDescription triggerButtonDesc))
                 {
-                    throw new InvalidOperationException($"Button Id {triggerButtonId} is not known. Cannot register derived axis based on unknown trigger button id.");
+                    ThrowHelper.ThrowInvalidOperationException($"Button Id {triggerButtonId} is not known. Cannot register derived axis based on unknown trigger button id.");
                 }
                 float closureLastValue = GetAxis(origAxisId);
                 bool closureOffLastTime = true;
@@ -620,7 +623,7 @@ namespace Fusee.Engine.Core
         {
             if (!_buttons.TryGetValue(origButtonId, out ButtonDescription origButtonDesc))
             {
-                throw new InvalidOperationException($"Button Id {origButtonId} is not known. Cannot register button axis based on unknown button.");
+                ThrowHelper.ThrowInvalidOperationException($"Button Id {origButtonId} is not known. Cannot register button axis based on unknown button.");
             }
 
             // Ramp cannot be 90° as this would require special case handling
@@ -715,12 +718,12 @@ namespace Fusee.Engine.Core
         {
             if (!_buttons.TryGetValue(origButtonIdPositive, out ButtonDescription origButtonDescPos))
             {
-                throw new InvalidOperationException($"Button Id {origButtonIdPositive} is not known. Cannot register button axis based on unknown button.");
+                ThrowHelper.ThrowInvalidOperationException($"Button Id {origButtonIdPositive} is not known. Cannot register button axis based on unknown button.");
             }
 
             if (!_buttons.TryGetValue(origButtonIdNegative, out ButtonDescription origButtonDescNeg))
             {
-                throw new InvalidOperationException($"Button Id {origButtonIdNegative} is not known. Cannot register button axis based on unknown button.");
+                ThrowHelper.ThrowInvalidOperationException($"Button Id {origButtonIdNegative} is not known. Cannot register button axis based on unknown button.");
             }
 
 
@@ -829,7 +832,7 @@ namespace Fusee.Engine.Core
                 foreach (var axisId in _axesToPoll.Keys.ToArray()) // ToArray: get the list up-front because we will change the _axesToPoll dictionary during iteration
                 {
                     if (!TryGetPolledAxis(axisId, out float curVal))
-                        throw new InvalidOperationException($"Invalid axis Id {axisId} - should be polled or derived.");
+                        ThrowHelper.ThrowInvalidOperationException($"Invalid axis Id {axisId} - should be polled or derived.");
 
                     if (_axesToPoll[axisId] != curVal)
                     {

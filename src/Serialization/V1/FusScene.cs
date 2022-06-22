@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Serialization.V1
 {
@@ -25,7 +26,7 @@ namespace Fusee.Serialization.V1
         public List<FusNode> Children;
 
         /// <summary>
-        /// Adds a node as a a child node to 
+        /// Adds a node as a a child node to
         /// </summary>
         /// <param name="node"></param>
         public void AddNode(FusNode node)
@@ -34,11 +35,11 @@ namespace Fusee.Serialization.V1
             {
                 node.Scene = this;
                 if (node.Children != null && node.Children.Count != 0)
-                    throw new InvalidOperationException("Adding FusNode objects with children is not yet implemented");
+                    ThrowHelper.ThrowInvalidOperationException("Adding FusNode objects with children is not yet implemented");
             }
             else if (node.Scene != this)
             {
-                throw new InvalidOperationException("Adding FusNode objects from other FusScenes is not yet implemented");
+                ThrowHelper.ThrowInvalidOperationException("Adding FusNode objects from other FusScenes is not yet implemented");
             }
 
             if (node.Components == null)

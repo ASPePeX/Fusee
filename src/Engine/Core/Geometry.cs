@@ -1,5 +1,6 @@
 ﻿using Fusee.Engine.Core.Scene;
 using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 
@@ -164,22 +165,21 @@ namespace Fusee.Engine.Core
             Face f = new();
 
             // Plausibility checks interleaved...
-            if (vertInx == null)
-                throw new ArgumentNullException(nameof(vertInx));
+            Guard.IsNotNull(vertInx, nameof(vertInx));
 
             f.InxVert = new int[vertInx.Length];
             for (i = 0; i < vertInx.Length; i++)
             {
                 var vInx = vertInx[i];
                 if (!(0 <= vInx && vInx < _vertices.Count))
-                    throw new ArgumentException("Vertex index out of range: " + vInx, "vertInx[" + i + "]");
+                    ThrowHelper.ThrowArgumentException("Vertex index out of range: " + vInx, "vertInx[" + i + "]");
                 f.InxVert[i] = vInx;
             }
 
             if (texCoordInx != null)
             {
                 if (texCoordInx.Length != vertInx.Length)
-                    throw new ArgumentException(
+                    ThrowHelper.ThrowArgumentException(
                         "Number of texture coordinate indices must match number of vertex indices", nameof(texCoordInx));
 
                 f.InxTexCoord = new int[texCoordInx.Length];
@@ -187,7 +187,7 @@ namespace Fusee.Engine.Core
                 {
                     var tInx = texCoordInx[i];
                     if (!(0 <= tInx && tInx < _texCoords.Count))
-                        throw new ArgumentException("Texture coordinate index out of range: " + tInx, "texCoordInx[" + i + "]");
+                        ThrowHelper.ThrowArgumentException("Texture coordinate index out of range: " + tInx, "texCoordInx[" + i + "]");
                     f.InxTexCoord[i] = tInx;
                 }
             }
@@ -195,14 +195,14 @@ namespace Fusee.Engine.Core
             if (normalInx != null)
             {
                 if (normalInx.Length != vertInx.Length)
-                    throw new ArgumentException("Number of normal indices must match number of vertex indices", nameof(normalInx));
+                    ThrowHelper.ThrowArgumentException("Number of normal indices must match number of vertex indices", nameof(normalInx));
 
                 f.InxNormal = new int[normalInx.Length];
                 for (i = 0; i < normalInx.Length; i++)
                 {
                     var nInx = normalInx[i];
                     if (!(0 <= nInx && nInx < _normals.Count))
-                        throw new ArgumentException("Normal index out of range: " + nInx, "normalInx[" + i + "]");
+                        ThrowHelper.ThrowArgumentException("Normal index out of range: " + nInx, "normalInx[" + i + "]");
                     f.InxNormal[i] = nInx;
                 }
             }
@@ -282,7 +282,7 @@ namespace Fusee.Engine.Core
         public double3 CalcFaceNormal(Face f)
         {
             if (f.InxVert.Length < 3)
-                throw new FormatException("Cannot calculate normal of degenerate face with only " + f.InxVert.Length + " vertices.");
+                ThrowHelper.ThrowFormatException("Cannot calculate normal of degenerate face with only " + f.InxVert.Length + " vertices.");
 
             var vertex0 = f.InxVert[0];
             double3 v1 = _vertices[vertex0] - _vertices[f.InxVert[2]];
@@ -309,7 +309,7 @@ namespace Fusee.Engine.Core
                     normals.Add(CalcFaceNormal(_faces[i]));
                 }
                 // Quick and dirty solution: if the smoothing angle holds for all combinations we create a shared normal,
-                // otherwise we create individual normals for each face. 
+                // otherwise we create individual normals for each face.
                 // TODO: Build groups of shared normals where faces are connected by edges (need edges to do this)
                 bool smoothit = true;
                 for (int i = 0; i < normals.Count; i++)
@@ -372,7 +372,7 @@ namespace Fusee.Engine.Core
             /// Returns a hash code for this instance.
             /// </summary>
             /// <returns>
-            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
             /// </returns>
             public override int GetHashCode()
             {

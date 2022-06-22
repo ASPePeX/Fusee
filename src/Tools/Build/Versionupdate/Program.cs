@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Tools.Build.Versionupdate
 {
@@ -154,7 +155,7 @@ namespace Fusee.Tools.Build.Versionupdate
                       }
                       else
                       {
-                          throw new NotSupportedException("Something didn't work!");
+                          ThrowHelper.ThrowNotSupportedException("Something didn't work!");
                       }
                   });
 

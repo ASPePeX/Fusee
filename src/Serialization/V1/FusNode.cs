@@ -3,6 +3,7 @@ using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Serialization.V1
 {
@@ -49,19 +50,19 @@ namespace Fusee.Serialization.V1
         public IEnumerable<IComponent> EnumComponents => Components?.Select(idx => Scene?.ComponentList[idx]);
 
         /// <summary>
-        /// Adds a component to this node's list of components. Internally the component is 
+        /// Adds a component to this node's list of components. Internally the component is
         /// stored in this node's <see cref="Scene"/> instance and referenced in the node.
         /// </summary>
         /// <param name="component">The component to store in this node's component list.</param>
         public void AddComponent(FusComponent component)
         {
             if (Scene == null)
-                throw new InvalidOperationException($"Cannot add component {component} to node {this} (not yet attached to a scene)");
+                ThrowHelper.ThrowInvalidOperationException($"Cannot add component {component} to node {this} (not yet attached to a scene)");
             Components.Add(Scene.GetComponentIndex(component));
         }
 
         /// <summary>
-        /// Adds a node as a a child node to 
+        /// Adds a node as a a child node to
         /// </summary>
         /// <param name="node"></param>
         public void AddNode(FusNode node)
@@ -70,11 +71,11 @@ namespace Fusee.Serialization.V1
             {
                 node.Scene = Scene;
                 if (node.Children != null && node.Children.Count != 0)
-                    throw new InvalidOperationException("Adding FusNode objects with children is not yet implemented");
+                    ThrowHelper.ThrowInvalidOperationException("Adding FusNode objects with children is not yet implemented");
             }
             else if (node.Scene != Scene)
             {
-                throw new InvalidOperationException("Adding FusNode objects from other FusScenes is not yet implemented");
+                ThrowHelper.ThrowInvalidOperationException("Adding FusNode objects from other FusScenes is not yet implemented");
             }
 
             if (node.Components == null)

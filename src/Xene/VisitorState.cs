@@ -1,4 +1,5 @@
 ﻿using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ namespace Fusee.Xene
     /// <summary>
     /// Defines the minimum set of operations on any data structure to be used as a stack during traversal. The main difference
     /// between StateStacks and "normal" stacks (<see cref="Stack{T}"/>) is that the Push operation here doesn't take an argument
-    /// but simply replicates the current state (or rather - memorizes the current state for restoring it later with Push). 
+    /// but simply replicates the current state (or rather - memorizes the current state for restoring it later with Push).
     /// </summary>
     public interface IStateStack
     {
@@ -30,7 +31,7 @@ namespace Fusee.Xene
         /// Retrieves the stack's depth.
         /// </summary>
         /// <value>
-        /// The current depth of the stack. 
+        /// The current depth of the stack.
         /// </value>
         int Depth { get; }
     }
@@ -47,7 +48,7 @@ namespace Fusee.Xene
         /// <summary>
         /// Initializes a new instance of the <see cref="StateStack{T}"/> class.
         /// </summary>
-        /// <param name="capacity">The initial capacity of the stack. This is the expected maximum stack depth. 
+        /// <param name="capacity">The initial capacity of the stack. This is the expected maximum stack depth.
         /// If the stack depth grows bigger, the stack automatically doubles its capacity internally.</param>
         public StateStack(int capacity = _defaultCapacity)
         {
@@ -112,7 +113,7 @@ namespace Fusee.Xene
 
     /// <summary>
     /// An <see cref="IStateStack"/> implementation behaving better in situations where many subsequent Push (and Pop) operations occur
-    /// without actually altering the TOS contents. 
+    /// without actually altering the TOS contents.
     /// </summary>
     /// <remarks>
     /// Using instances of this class is recommended if the Type parameter is a large value type.
@@ -126,11 +127,11 @@ namespace Fusee.Xene
         /// <summary>
         /// Initializes a new instance of the <see cref="CollapsingStateStack{T}"/> class.
         /// </summary>
-        /// <param name="capacity">The initial capacity of the stack. This is the expected maximum stack depth. 
+        /// <param name="capacity">The initial capacity of the stack. This is the expected maximum stack depth.
         /// If the stack depth grows bigger, the stack automatically doubles its capacity internally.</param>
         public CollapsingStateStack(int capacity = _defaultCapacity)
         {
-            // The _impStack keeps the actual top-of-stack values. 
+            // The _impStack keeps the actual top-of-stack values.
             _impStack = new StateStack<T>(capacity);
             // The _countStack keeps the number of "Push" operations that occurred between two Tos alterations
             _countStack = new StateStack<int>(capacity);
@@ -155,7 +156,7 @@ namespace Fusee.Xene
         public void Pop()
         {
             if (Depth <= 0)
-                throw new InvalidOperationException("CollapsingState Stack depth is already 0. Cannot Pop stack.");
+                ThrowHelper.ThrowInvalidOperationException("CollapsingState Stack depth is already 0. Cannot Pop stack.");
 
             Depth--;
             if (_countStack.Tos >= 1)
@@ -215,7 +216,7 @@ namespace Fusee.Xene
 
     /// <summary>
     /// Dummy implementation of the <see cref="IStateStack"/> interface. Nothing can be stored within instance of this type.
-    /// There's no Top of Stack object. Only the stack Depth is correctly tracked according to the number of Push() and Pop() 
+    /// There's no Top of Stack object. Only the stack Depth is correctly tracked according to the number of Push() and Pop()
     /// operations already performed on the EmptyStack.
     /// </summary>
     public class EmptyState : IStateStack
@@ -256,12 +257,12 @@ namespace Fusee.Xene
     }
 
     /// <summary>
-    /// Use this as a base class for defining your own state for arbitrary Visitors. 
+    /// Use this as a base class for defining your own state for arbitrary Visitors.
     /// </summary>
     /// <remarks>
     /// A state is always a list of individual
     /// values that can be altered during traversal. To restore state along hierarchy levels the values are kept in <see cref="IStateStack"/>objects - one stack
-    /// per tracked value. 
+    /// per tracked value.
     /// The VisitorState itself represents an <see cref="IStateStack"/>. It delegates all interface methods to the individual value stacks registered.
     /// </remarks>
     /// <example>Here's an example of a VisitorState containing an integer and a string value:
@@ -270,19 +271,19 @@ namespace Fusee.Xene
     /// {
     ///     private CollapsingStateStack&lt;string&gt; _stringState = new CollapsingStateStack&lt;string&gt;();
     ///     private CollapsingStateStack&lt;int&gt; _intState = new CollapsingStateStack&lt;int&gt;();
-    /// 
+    ///
     ///     public string StringState
     ///     {
     ///          get { return _stringState.Tos; }
     ///          set { _stringState.Tos = value; }
     ///     }
-    /// 
+    ///
     ///     public string IntState
     ///     {
     ///          get { return _intState.Tos; }
     ///          set { _intState.Tos = value; }
     ///     }
-    /// 
+    ///
     ///     TestState() : base()
     ///     {
     ///        RegisterState(_stringState);

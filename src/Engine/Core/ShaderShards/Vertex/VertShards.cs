@@ -1,5 +1,5 @@
 ﻿using Fusee.Engine.Core.Effects;
-using System;
+using Microsoft.Toolkit.Diagnostics;
 using System.Collections.Generic;
 
 namespace Fusee.Engine.Core.ShaderShards.Vertex
@@ -34,7 +34,8 @@ namespace Fusee.Engine.Core.ShaderShards.Vertex
                     );
                     break;
                 default:
-                    throw new ArgumentException("Invalid ShadingModel!");
+                    ThrowHelper.ThrowArgumentException("Invalid ShadingModel!");
+                    break;
             }
             return res;
         }
@@ -61,7 +62,8 @@ namespace Fusee.Engine.Core.ShaderShards.Vertex
                     );
                     break;
                 default:
-                    throw new ArgumentException("Invalid ShadingModel!");
+                    ThrowHelper.ThrowArgumentException("Invalid ShadingModel!");
+                    break;
             }
             return res;
         }

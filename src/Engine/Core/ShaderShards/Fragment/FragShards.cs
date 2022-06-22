@@ -1,6 +1,7 @@
 ﻿using Fusee.Engine.Core.Effects;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core.ShaderShards.Fragment
 {
@@ -72,7 +73,8 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                     res.Add("OUT.subsurfaceColor = IN.SubsurfaceColor;");
                     break;
                 default:
-                    throw new ArgumentException("Invalid ShadingModel!");
+                    ThrowHelper.ThrowArgumentException("Invalid ShadingModel!");
+                    break;
             }
 
             if (surfInput.TextureSetup.HasFlag(TextureSetup.AlbedoTex))
@@ -154,7 +156,8 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                     res.Add("OUT.subsurfaceColor = IN.SubsurfaceColor;");
                     break;
                 default:
-                    throw new ArgumentException("Invalid ShadingModel!");
+                    ThrowHelper.ThrowArgumentException("Invalid ShadingModel!");
+                    break;
             }
 
             if (texSetup.HasFlag(TextureSetup.AlbedoTex))

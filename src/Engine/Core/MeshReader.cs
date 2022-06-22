@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core
 {
@@ -91,7 +92,7 @@ namespace Fusee.Engine.Core
 
                     if (!(3 <= values.Length && values.Length < nMaxInx))
                     {
-                        throw new ArgumentOutOfRangeException("Error reading obj file (" + lineNumber +
+                        ThrowHelper.ThrowArgumentOutOfRangeException("Error reading obj file (" + lineNumber +
                                             "). Face definition number of vertices must be within [3.." + nMaxInx + "].");
                     }
 
@@ -105,14 +106,14 @@ namespace Fusee.Engine.Core
                         if (nFaceRefs == 0)
                         {
                             if (!(1 <= vDef.Length && vDef.Length <= 3))
-                                throw new ArgumentOutOfRangeException("Error reading obj file (" + lineNumber +
+                                ThrowHelper.ThrowArgumentOutOfRangeException("Error reading obj file (" + lineNumber +
                                                     "). Face definitions must contain 1, 2 or 3 indices per vertex");
                             nFaceRefs = vDef.Length;
                         }
                         else
                         {
                             if (vDef.Length != nFaceRefs)
-                                throw new ArgumentOutOfRangeException("Error reading obj file (" + lineNumber +
+                                ThrowHelper.ThrowArgumentOutOfRangeException("Error reading obj file (" + lineNumber +
                                                     "). Inconsistent face definitions");
                         }
 
@@ -128,7 +129,7 @@ namespace Fusee.Engine.Core
                         if (vDef.Length > 2)
                         {
                             if (String.IsNullOrEmpty(vDef[1]))
-                                throw new FormatException("Error reading obj file (" + lineNumber +
+                                ThrowHelper.ThrowFormatException("Error reading obj file (" + lineNumber +
                                                     "). Syntax error in face definition");
 
                             if (nI == null)
@@ -255,7 +256,7 @@ namespace Fusee.Engine.Core
       public Texture texture;
   }
 
- 
+
 
       /// <summary>
       /// This method is used to load information stored in .mtl files referenced by the .obj file.

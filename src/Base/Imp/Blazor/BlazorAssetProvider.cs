@@ -1,6 +1,7 @@
 ﻿using Fusee.Base.Common;
 using Fusee.Base.Core;
 using Microsoft.JSInterop;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -61,10 +62,7 @@ namespace Fusee.Base.Imp.Blazor
             RegisterTypeHandler(new AssetHandler
             {
                 ReturnedType = typeof(ImageData),
-                Decoder = (string id, object storage) =>
-                {
-                    throw new NotSupportedException("Synchronous Decoder is not supported - use DecoderAsync instead!");
-                },
+                Decoder = (string id, object storage) => ThrowHelper.ThrowNotSupportedException<AssetDecoder>("Synchronous Decoder is not supported - use DecoderAsync instead!"),
                 DecoderAsync = async (string id, object storage) =>
                 {
                     var ext = Path.GetExtension(id).ToLower();
@@ -89,10 +87,7 @@ namespace Fusee.Base.Imp.Blazor
             RegisterTypeHandler(new AssetHandler
             {
                 ReturnedType = typeof(string),
-                Decoder = (string id, object storage) =>
-                {
-                    throw new NotSupportedException("Synchronous Decoder is not supported - use DecoderAsync instead!");
-                },
+                Decoder = (string id, object storage) => ThrowHelper.ThrowNotSupportedException<AssetDecoder>("Synchronous Decoder is not supported - use DecoderAsync instead!"),
                 DecoderAsync = async (string _, object storage) =>
                 {
                     Stream storageStream = (Stream)storage;
@@ -168,7 +163,7 @@ namespace Fusee.Base.Imp.Blazor
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override bool CheckExists(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             string baseAddress = BlazorAssetProvider.GetLocalAddress(_runtime).Result + "Assets/";
             using HttpClient httpClient = new() { BaseAddress = new Uri(baseAddress) };
@@ -186,7 +181,7 @@ namespace Fusee.Base.Imp.Blazor
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override async Task<bool> CheckExistsAsync(string id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
 
             string baseAddress = await BlazorAssetProvider.GetLocalAddress(_runtime) + "Assets/";
             using HttpClient httpClient = new() { BaseAddress = new Uri(baseAddress) };

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Diagnostics;
+using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -617,21 +618,14 @@ namespace Fusee.Math.Core
 
             string[] strings = source.Split(new char[] { separator, '(', ')', ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (strings.Length != 9)
-                throw new FormatException("String parse for float3x3 did not result in exactly 9 items.");
+            // String parse for float3x3 did not result in exactly 9 items.
+            Guard.IsEqualTo(strings.Length, 9, nameof(strings));
 
             float[] floats = new float[strings.Length];
 
             for (int i = 0; i < strings.Length; i++)
             {
-                try
-                {
-                    floats[i] = float.Parse(strings[i], provider);
-                }
-                catch
-                {
-                    throw new FormatException();
-                }
+                floats[i] = float.Parse(strings[i], provider);
             }
 
             return new float3x3(floats[0], floats[1], floats[2], floats[3], floats[4], floats[5], floats[6], floats[7], floats[8]);

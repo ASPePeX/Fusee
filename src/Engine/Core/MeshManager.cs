@@ -1,6 +1,7 @@
 using Fusee.Engine.Common;
 using Fusee.Engine.Core.Scene;
 using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace Fusee.Engine.Core
         private void DisposeMesh(object sender, MeshChangedEventArgs meshDataEventArgs)
         {
             if (!_identifierToMeshImpDictionary.TryGetValue(meshDataEventArgs.Mesh.SessionUniqueIdentifier, out IMeshImp toBeUpdatedMeshImp))
-                throw new KeyNotFoundException("Mesh is not registered.");
+                ThrowHelper.ThrowArgumentException("Mesh is not registered.");
 
             // Add the meshImp to the toBeDeleted Stack...#
             _toBeDeletedMeshImps.Push(toBeUpdatedMeshImp);
@@ -68,7 +69,7 @@ namespace Fusee.Engine.Core
         private void MeshChanged(object sender, MeshChangedEventArgs meshDataEventArgs)
         {
             if (!_identifierToMeshImpDictionary.TryGetValue(meshDataEventArgs.Mesh.SessionUniqueIdentifier, out IMeshImp toBeUpdatedMeshImp))
-                throw new KeyNotFoundException("Mesh is not registered.");
+                ThrowHelper.ThrowArgumentException("Mesh is not registered.");
 
             var mesh = (Mesh)meshDataEventArgs.Mesh;
 
@@ -229,7 +230,7 @@ namespace Fusee.Engine.Core
         {
             if (!_identifierToMeshImpDictionary.TryGetValue(m.SessionUniqueIdentifier, out IMeshImp foundMeshImp))
             {
-                throw new ArgumentException("GpuMesh not found, make sure you created it first.");
+                ThrowHelper.ThrowArgumentException("GpuMesh not found, make sure you created it first.");
             }
             return foundMeshImp;
         }

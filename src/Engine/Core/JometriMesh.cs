@@ -3,6 +3,7 @@ using Fusee.Math.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core
 {
@@ -48,7 +49,7 @@ namespace Fusee.Engine.Core
                 var faceVerts = geometry.GetFaceVertices(face.Handle).ToList();
 
                 if (faceVerts.Count > 3)
-                    throw new ArgumentException("Invalid triangle - face has more than 3 Vertices");
+                    ThrowHelper.ThrowArgumentException("Invalid triangle - face has more than 3 Vertices");
 
                 foreach (var vertex in faceVerts)
                 {

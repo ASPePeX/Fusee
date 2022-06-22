@@ -1,4 +1,5 @@
 ﻿using Fusee.Engine.Common;
+using Microsoft.Toolkit.Diagnostics;
 using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,14 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         public WindowsTouchInputDriverImp(IRenderCanvasImp renderCanvas)
         {
             if (renderCanvas == null)
-                throw new ArgumentNullException(nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
 
             if (!(renderCanvas is RenderCanvasImp))
-                throw new ArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}", nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}", nameof(renderCanvas));
 
             _gameWindow = ((RenderCanvasImp)renderCanvas)._gameWindow;
             if (_gameWindow == null)
-                throw new ArgumentNullException(nameof(_gameWindow));
+                ThrowHelper.ThrowArgumentNullException(nameof(_gameWindow));
 
 
             _touch = new WindowsTouchInputDeviceImp(_gameWindow);
@@ -130,7 +131,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
     /// <summary>
     /// Touch input device implementation for the Windows platform. This implementation directly
     /// sniffles at the render window's message pump (identified by the <see cref="GameWindow"/> parameter passed
-    /// to the constructor) to receive 
+    /// to the constructor) to receive
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh454904(v=vs.85).aspx">WM_POINTER</a> messages.
     /// </summary>
     public class WindowsTouchInputDeviceImp : IInputDeviceImp
@@ -365,7 +366,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         {
             // Diagnostics.Log($"TouchStart {id}");
             if (_activeTouchpoints.ContainsKey(id))
-                throw new InvalidOperationException($"Windows Touch id {id} is already tracked. Cannot track another touchpoint using this id.");
+                ThrowHelper.ThrowInvalidOperationException($"Windows Touch id {id} is already tracked. Cannot track another touchpoint using this id.");
 
             var inx = NextFreeTouchIndex;
             if (inx < 0)
@@ -411,7 +412,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsTouchInputDeviceImp" /> class.
         /// </summary>
-        /// <param name="gameWindow">The game window to hook on to receive 
+        /// <param name="gameWindow">The game window to hook on to receive
         /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh454904(v=vs.85).aspx">WM_POINTER</a> messages.</param>
         public WindowsTouchInputDeviceImp(GameWindow gameWindow)
         {
@@ -546,7 +547,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         public string Desc => "MS Windows standard Touch device.";
 
         /// <summary>
-        /// Returns a (hopefully) unique ID for this driver. Uniqueness is granted by using the 
+        /// Returns a (hopefully) unique ID for this driver. Uniqueness is granted by using the
         /// full class name (including namespace).
         /// </summary>
         public string Id => GetType().FullName;
@@ -567,7 +568,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// </summary>
         public DeviceCategory Category => DeviceCategory.Touch;
         /// <summary>
-        /// Returns the number of axes. Up to five touchpoints (with two axes (X and Y) per Touchpoint plus 
+        /// Returns the number of axes. Up to five touchpoints (with two axes (X and Y) per Touchpoint plus
         /// one axis carrying the number of currently touched touchpoints plus four axes describing the minimum and
         /// maximum X and Y values.
         /// </summary>
@@ -596,7 +597,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
                 (int)TouchAxes.MaxX => GetWindowWidth(),
                 (int)TouchAxes.MinY => 0,
                 (int)TouchAxes.MaxY => GetWindowHeight(),
-                _ => throw new InvalidOperationException($"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this device."),
+                _ => ThrowHelper.ThrowInvalidOperationException<float>($"Unknown axis {iAxisId}.  Probably an event based axis or unsupported by this device."),
             };
         }
 
@@ -623,7 +624,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <returns>true if the button is hit, else false</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException($"Unknown button id {iButtonId}. This device supports no pollable buttons at all.");
+            return ThrowHelper.ThrowInvalidOperationException<bool>($"Unknown button id {iButtonId}. This device supports no pollable buttons at all.");
         }
     }
 }

@@ -1,6 +1,7 @@
 using Fusee.Base.Common;
 using Fusee.Engine.Common;
 using Fusee.Engine.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 
 namespace Fusee.Engine.Imp.Shared
@@ -62,7 +63,8 @@ namespace Fusee.Engine.Imp.Shared
         public void SetTextureFromRenderTarget(IRenderTarget src, RenderTargetTextureTypes tex)
         {
             var srcTex = src.RenderTextures[(int)tex];
-            RenderTextures[(int)tex] = srcTex ?? throw new ArgumentException("Texture from source target is null!");
+            Guard.IsNotNull(srcTex, nameof(srcTex));
+            RenderTextures[(int)tex] = srcTex;
         }
 
         /// <summary>
@@ -72,7 +74,8 @@ namespace Fusee.Engine.Imp.Shared
         /// <param name="tex">The type of the texture.</param>
         public void SetTexture(IWritableTexture src, RenderTargetTextureTypes tex)
         {
-            RenderTextures[(int)tex] = src ?? throw new ArgumentException("Texture from source target is null!");
+            Guard.IsNotNull(src, nameof(src));
+            RenderTextures[(int)tex] = src;
         }
 
         /// <summary>
@@ -85,7 +88,7 @@ namespace Fusee.Engine.Imp.Shared
 
         /// <summary>
         /// Generates a albedo and specular (alpha channel) texture and sets it at the correct position in the RenderTextures Array.
-        /// </summary>       
+        /// </summary>
         public void SetAlbedoTex()
         {
             RenderTextures[(int)RenderTargetTextureTypes.Albedo] = WritableTexture.CreateAlbedoTex((int)TextureResolution, (int)TextureResolution, new ImagePixelFormat(ColorFormat.RGBA));

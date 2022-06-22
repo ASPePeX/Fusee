@@ -1,4 +1,5 @@
 ﻿using Fusee.Engine.Imp.Graphics.Desktop._3Dconnexion;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -107,7 +108,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop._3Dconnexion
             SI_RIGHT
         }
 
-        #endregion 
+        #endregion
 
         #region Const Variables
 
@@ -502,7 +503,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop._3DconnexionDriver
         public void InitDevice(IntPtr windowHandle)
         {
             if (IsDisposed)
-                throw new ObjectDisposedException("");
+                ThrowHelper.ThrowObjectDisposedException(nameof(windowHandle));
             if (IsAvailable)
                 return; //Init already done.
 
@@ -590,7 +591,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop._3DconnexionDriver
             ZeroPoint?.Invoke(this, EventArgs.Empty);
         }
         /// <summary>
-        /// Is called if the mouse is moved. 
+        /// Is called if the mouse is moved.
         /// </summary>
         /// <param name="args"></param>
         protected virtual void OnMotion(MotionEventArgs args)
@@ -764,9 +765,9 @@ namespace Fusee.Engine.Imp.Graphics.Desktop._3DconnexionDriver
         public static MotionEventArgs FromEventArray(int[] data)
         {
             if (data == null)
-                throw new ArgumentNullException(nameof(data));
+                ThrowHelper.ThrowArgumentNullException(nameof(data));
             if (data.Length < 6)
-                throw new ArgumentException("data array to small");
+                ThrowHelper.ThrowArgumentException("data array to small");
 
             return new MotionEventArgs(data[0], data[1], data[2], data[3], data[4], data[5]);
         }

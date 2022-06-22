@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Jometri
 {
@@ -20,7 +21,7 @@ namespace Fusee.Jometri
         public static Geometry CreateCuboidGeometry(float dimensionX, float dimensionY, float dimensionZ)
         {
             //check input
-            if (dimensionX <= 0 || dimensionY <= 0 || dimensionZ <= 0) throw new ArgumentException("The dimension values can not be <= 0");
+            if (dimensionX <= 0 || dimensionY <= 0 || dimensionZ <= 0) ThrowHelper.ThrowArgumentException("The dimension values can not be <= 0");
 
             var xPos = dimensionX / 2.0f;
             var yPos = dimensionY / 2.0f;
@@ -49,13 +50,13 @@ namespace Fusee.Jometri
         /// Creates and returns a UV-Sphere as a DCEL with the specified dimensions centered in the worlds coordinate system.
         /// </summary>
         /// <param name="radius">Radius of the sphere.</param>
-        /// <param name="horizontalResolution">Lines of latitude, smallest value is 3.</param> 
+        /// <param name="horizontalResolution">Lines of latitude, smallest value is 3.</param>
         /// <param name="verticalResolution">Lines of longitude, smallest value is 3.</param>
         /// <returns>A UV-Sphere centered in the world coordinate system as a DCEL.</returns>
         public static Geometry CreateSphereGeometry(float radius, int horizontalResolution, int verticalResolution)
         {
             //check input
-            if (radius <= 0) throw new ArgumentException("Radius can not be <= 0");
+            if (radius <= 0) ThrowHelper.ThrowArgumentException("Radius can not be <= 0");
             if (horizontalResolution <= 3) horizontalResolution = 3;
             if (verticalResolution <= 2) verticalResolution = 2;
 
@@ -203,7 +204,7 @@ namespace Fusee.Jometri
 
                 }
 
-                //set twins 
+                //set twins
                 for (int j = 0; j < horizontalResolution; j++)
                 {
                     //set twins of adjacent triangles bottom
@@ -235,7 +236,7 @@ namespace Fusee.Jometri
                         sphere.ReplaceHalfEdge(nextH2);
                         sphere.ReplaceHalfEdge(h3);
                     }
-                    else //set twins of adjacent quads 
+                    else //set twins of adjacent quads
                     {
                         var h1 = sphere.GetHalfEdgeByHandle(topHeHandles[j]);
                         var h4 = sphere.GetHalfEdgeByHandle(h1.PrevHalfEdge);
@@ -300,7 +301,7 @@ namespace Fusee.Jometri
         {
             //check input
             if (sliceCount < 3) sliceCount = 3;
-            if (baseRadius <= 0 || dimensionY <= 0) throw new ArgumentException("You can not input parameters <= 0");
+            if (baseRadius <= 0 || dimensionY <= 0) ThrowHelper.ThrowArgumentException("You can not input parameters <= 0");
 
             var cone = new Geometry();
             var northPole = new Vertex(cone.CreateVertHandleId(), new float3(0, dimensionY / 2, 0));
@@ -481,7 +482,7 @@ namespace Fusee.Jometri
         public static Geometry CreatePyramidGeometry(float dimensionX, float dimensionY, float dimensionZ)
         {
             //check input
-            if (dimensionX <= 0 || dimensionY <= 0 || dimensionZ <= 0) throw new ArgumentException("The dimension values can not be <= 0");
+            if (dimensionX <= 0 || dimensionY <= 0 || dimensionZ <= 0) ThrowHelper.ThrowArgumentException("The dimension values can not be <= 0");
 
             var xPos = dimensionX / 2.0f;
             var yPos = dimensionY / 2.0f;
@@ -498,7 +499,7 @@ namespace Fusee.Jometri
             positions[4] = new float3(0, yPos, 0);
 
             var baseFace = new Face(6) { OuterHalfEdge = 4 };
-            //create and add vertices 
+            //create and add vertices
             for (var i = 0; i < 5; i++)
             {
                 Vertex current = new(pyramid.CreateVertHandleId(), positions[i]);

@@ -1,6 +1,7 @@
 ﻿using Fusee.Base.Core;
 using Fusee.Engine.Common;
 using Fusee.Engine.Imp.Graphics.Desktop._3DconnexionDriver;
+using Microsoft.Toolkit.Diagnostics;
 using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
     /// </summary>
     public class WindowsSpaceMouseDriverImp : IInputDriverImp
     {
-        readonly GameWindow _gameWindow;
-        readonly WindowsSpaceMouseInputDeviceImp _SMI;
+        private readonly GameWindow _gameWindow;
+        private readonly WindowsSpaceMouseInputDeviceImp _SMI;
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsSpaceMouseDriverImp"/> class.
         /// </summary>
@@ -31,14 +32,14 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         public WindowsSpaceMouseDriverImp(IRenderCanvasImp renderCanvas)
         {
             if (renderCanvas == null)
-                throw new ArgumentNullException(nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
 
-            if (!(renderCanvas is RenderCanvasImp))
-                throw new ArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}", nameof(renderCanvas));
+            if (renderCanvas is not RenderCanvasImp)
+                ThrowHelper.ThrowArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}", nameof(renderCanvas));
 
             _gameWindow = ((RenderCanvasImp)renderCanvas)._gameWindow;
             if (_gameWindow == null)
-                throw new ArgumentNullException(nameof(_gameWindow));
+                ThrowHelper.ThrowArgumentNullException(nameof(_gameWindow));
 
             _SMI = new WindowsSpaceMouseInputDeviceImp(_gameWindow);
         }
@@ -129,7 +130,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
     /// <summary>
     /// SMI input device implementation for the Windows platform. This implementation directly
     /// sniffs at the render window's message pump (identified by the <see cref="GameWindow"/> parameter passed
-    /// to the constructor) to receive 
+    /// to the constructor) to receive
     /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh454904(v=vs.85).aspx">WM_POINTER</a> messages.
     /// </summary>
     public class WindowsSpaceMouseInputDeviceImp : IInputDeviceImp, IDisposable
@@ -162,6 +163,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         private static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
+        private
         // private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
         static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
@@ -202,7 +204,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowsSpaceMouseInputDeviceImp" /> class.
         /// </summary>
-        /// <param name="gameWindow">The game window to hook on to receive 
+        /// <param name="gameWindow">The game window to hook on to receive
         /// <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh454904(v=vs.85).aspx">WM_POINTER</a> messages.</param>
         public WindowsSpaceMouseInputDeviceImp(GameWindow gameWindow)
         {
@@ -399,7 +401,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <returns></returns>
         public float GetAxis(int iAxisId)
         {
-            throw new InvalidOperationException("Device has no axis to be polled.");
+            return ThrowHelper.ThrowInvalidOperationException<float>("Device has no axis to be polled.");
         }
 
         /// <summary>

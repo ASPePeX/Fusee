@@ -132,12 +132,12 @@ namespace Fusee.Engine.Core
             //var maxSamples = rc.GetHardwareCapabilities(HardwareCapability.MaxSamples);
             //if(maxSamples == 0)
             //{
-            //    throw new NotSupportedException($"Multisample texture is not supported for this platform");
+            //    ThrowHelper.ThrowNotSupportedException($"Multisample texture is not supported for this platform");
             //}
             //
             //if (multisampleFactor > maxSamples || multisampleFactor == 0)
             //{
-            //    throw new ArgumentException($"Multisample texture factor {multisampleFactor} is either '0' or too big. GL_MAX_SAMPLES for this ImagePixelFormat is {maxSamples}");
+            //    ThrowHelper.ThrowArgumentException($"Multisample texture factor {multisampleFactor} is either '0' or too big. GL_MAX_SAMPLES for this ImagePixelFormat is {maxSamples}");
             //}
 
             SessionUniqueIdentifier = Suid.GenerateSuid();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -299,6 +300,7 @@ namespace Fusee.Jometri
 
                 switch (vertTypes[current.Handle])
                 {
+
                     case VertexType.StartVertex:
                         HandleStartVertex(face, current, faceHalfEdges);
                         break;
@@ -315,7 +317,8 @@ namespace Fusee.Jometri
                         HandleRegularVertex(face, current, faceHalfEdges, newFaces);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException($"Cannot handle {vertTypes[current.Handle]}");
+                        ThrowHelper.ThrowArgumentOutOfRangeException($"Cannot handle {vertTypes[current.Handle]}");
+                        break;
                 }
                 sortedVertices.RemoveAt(0);
             }
@@ -517,7 +520,7 @@ namespace Fusee.Jometri
                 var nextHe = _geometry.GetHalfEdgeByHandle(he.NextHalfEdge);
                 return _geometry.GetVertexByHandle(nextHe.OriginVertex);
             }
-            throw new ArgumentException("Face " + face.Handle + " has no half edge with vertex " + currentVert.Handle + " as origin.");
+            return ThrowHelper.ThrowArgumentException<Vertex>("Face " + face.Handle + " has no half edge with vertex " + currentVert.Handle + " as origin.");
         }
 
         private static Vertex GetPrevVertex(Face face, IEnumerable<HalfEdge> faceHalfEdges, Vertex currentVert)
@@ -529,8 +532,7 @@ namespace Fusee.Jometri
                 var prevHe = _geometry.GetHalfEdgeByHandle(he.PrevHalfEdge);
                 return _geometry.GetVertexByHandle(prevHe.OriginVertex);
             }
-            throw new ArgumentException("Face " + face.Handle + " has no half edge with vertex " + currentVert.Handle + " as origin.");
-
+            return ThrowHelper.ThrowArgumentException<Vertex>("Face " + face.Handle + " has no half edge with vertex " + currentVert.Handle + " as origin.");
         }
 
         #endregion

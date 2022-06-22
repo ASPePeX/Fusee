@@ -1,4 +1,5 @@
 ﻿using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +70,7 @@ namespace Fusee.Base.Common
                         break;
                     }
 
-                    //If count = 0 it is the last segment of the curve. We need to add the first vertex in the list to the segment and leave it as it is. 
+                    //If count = 0 it is the last segment of the curve. We need to add the first vertex in the list to the segment and leave it as it is.
                     if (!count.Equals(0)) i = count - 1;
                     else cs.Vertices.Add(partVerts[0]);
 
@@ -129,7 +130,7 @@ namespace Fusee.Base.Common
             var segmentVerts = new List<float3>();
             segmentVerts.AddRange(verts.Skip(i).Take(pattern.Count));
 
-            CurveSegment segment;
+            CurveSegment segment = null;
             switch (Type)
             {
                 case SegmentType.Linear:
@@ -154,7 +155,8 @@ namespace Fusee.Base.Common
                     segment.Vertices = segmentVerts;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"Cannot handle {Type}");
+                    ThrowHelper.ThrowArgumentOutOfRangeException($"Cannot handle {Type}");
+                    break;
             }
 
             return segment;
@@ -165,7 +167,7 @@ namespace Fusee.Base.Common
             var segmentVerts = new List<float3>();
             segmentVerts.AddRange(verts.Skip(i).Take(pattern.Count));
             segmentVerts.Add(startPoint);
-            CurveSegment segment;
+            CurveSegment segment = null;
             switch (Type)
             {
                 case SegmentType.Linear:
@@ -190,7 +192,8 @@ namespace Fusee.Base.Common
                     segment.Vertices = segmentVerts;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException($"Cannot handle {Type}");
+                    ThrowHelper.ThrowArgumentOutOfRangeException($"Cannot handle {Type}");
+                    break;
             }
             segment.Vertices = segmentVerts;
             return segment;

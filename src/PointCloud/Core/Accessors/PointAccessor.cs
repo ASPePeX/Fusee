@@ -1,5 +1,6 @@
 ﻿using Fusee.Math.Core;
 using Fusee.PointCloud.Common.Accessors;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace Fusee.PointCloud.Core.Accessors
                 PointPositionType.Double3 when IntensityType == PointIntensityType.UShort && NormalType == PointNormalType.Float3 && ColorType == PointColorType.None && LabelType == PointLabelType.None && CurvatureType == PointCurvatureType.None && HitCountType == PointHitCountType.None && GpsTimeType == PointGpsTimeType.None => PointType.PosD3NorF3InUs,
                 PointPositionType.Double3 when IntensityType == PointIntensityType.None && NormalType == PointNormalType.Float3 && ColorType == PointColorType.Float && LabelType == PointLabelType.None && CurvatureType == PointCurvatureType.None && HitCountType == PointHitCountType.None && GpsTimeType == PointGpsTimeType.None => PointType.PosD3NorF3ColF3,
                 PointPositionType.Double3 when IntensityType == PointIntensityType.None && NormalType == PointNormalType.None && ColorType == PointColorType.Float && LabelType == PointLabelType.Byte && CurvatureType == PointCurvatureType.None && HitCountType == PointHitCountType.None && GpsTimeType == PointGpsTimeType.None => PointType.PosD3ColF3LblB,
-                _ => throw new Exception("Undefined Point Type!"),
+                _ => ThrowHelper.ThrowArgumentException<PointType>("Undefined Point Type!"),
             };
         }
 
@@ -96,7 +97,7 @@ namespace Fusee.PointCloud.Core.Accessors
         public byte[] GetRawPoint(ref TPoint point)
         {
             if (point == null)
-                throw new NullReferenceException("Given point is null!");
+                ThrowHelper.ThrowArgumentNullException("Given point is null!");
 
             var position = GetRawPosition(ref point);
             var intensity = GetRawIntensity(ref point);
@@ -118,7 +119,7 @@ namespace Fusee.PointCloud.Core.Accessors
         public void SetRawPoint(ref TPoint pointIn, byte[] byteIn)
         {
             if (pointIn == null || byteIn == null || byteIn.Length < 8)
-                throw new NullReferenceException("Invalid data given");
+                ThrowHelper.ThrowArgumentNullException("Invalid data given");
 
             // Call all methods to recreate the point
             SetRawPosition(ref pointIn, byteIn);
@@ -140,7 +141,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float3 GetPositionFloat3_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetPositionFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetPositionFloat32");
         }
         /// <summary>
         /// Sets the position of a point cloud point if <see cref="PointPositionType.Float3"/> is true.
@@ -149,7 +150,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new position value.</param>
         public virtual void SetPositionFloat3_32(ref TPoint point, float3 val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetPositionFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetPositionFloat32");
         }
         /// <summary>
         /// Returns the position of a point cloud point if <see cref="PointPositionType.Double3"/> is true.
@@ -157,7 +158,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double3 GetPositionFloat3_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetPositionFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetPositionFloat64");
         }
         /// <summary>
         /// Sets the position of a point cloud point if <see cref="PointPositionType.Double3"/> is true.
@@ -166,7 +167,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new position value.</param>
         public virtual void SetPositionFloat3_64(ref TPoint point, double3 val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetPositionFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetPositionFloat64");
         }
         #endregion
 
@@ -180,7 +181,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref sbyte GetIntensityInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_8");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.Short"/> is true.
@@ -188,7 +189,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref short GetIntensityInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_16");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.Int"/> is true.
@@ -196,7 +197,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref int GetIntensityInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_32");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.Long"/> is true.
@@ -204,7 +205,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref long GetIntensityInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityInt_64");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.Byte"/> is true.
@@ -212,7 +213,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref byte GetIntensityUInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_8");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.UShort"/> is true.
@@ -220,7 +221,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ushort GetIntensityUInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_16");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.UInt"/> is true.
@@ -228,7 +229,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref uint GetIntensityUInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_32");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.ULong"/> is true.
@@ -236,7 +237,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ulong GetIntensityUInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityUInt_64");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.Float"/> is true.
@@ -244,7 +245,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float GetIntensityFloat32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityFloat32");
         }
         /// <summary>
         /// Returns the intensity of a point cloud point if <see cref="PointIntensityType.Double"/> is true.
@@ -252,7 +253,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double GetIntensityFloat64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetIntensityFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetIntensityFloat64");
         }
         #endregion
 
@@ -264,7 +265,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityInt_8(ref TPoint point, sbyte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_8");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.Short"/> is true.
@@ -273,7 +274,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityInt_16(ref TPoint point, short val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_16");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.Int"/> is true.
@@ -282,7 +283,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityInt_32(ref TPoint point, int val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_32");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.Long"/> is true.
@@ -291,7 +292,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityInt_64(ref TPoint point, long val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityInt_64");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.Byte"/> is true.
@@ -300,7 +301,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityUInt_8(ref TPoint point, byte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_8");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.UShort"/> is true.
@@ -309,7 +310,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityUInt_16(ref TPoint point, ushort val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_16");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.UInt"/> is true.
@@ -318,7 +319,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityUInt_32(ref TPoint point, uint val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_32");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.ULong"/> is true.
@@ -327,7 +328,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityUInt_64(ref TPoint point, ulong val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityUInt_64");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.Float"/> is true.
@@ -336,7 +337,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityFloat32(ref TPoint point, float val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityFloat32");
         }
         /// <summary>
         /// Sets the intensity of a point cloud point if <see cref="PointIntensityType.Double"/> is true.
@@ -345,7 +346,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new intensity value.</param>
         public virtual void SetIntensityFloat64(ref TPoint point, double val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetIntensityFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetIntensityFloat64");
         }
         #endregion
 
@@ -361,7 +362,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float3 GetNormalFloat3_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetNormalFloat3_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetNormalFloat3_32");
         }
 
         /// <summary>
@@ -370,7 +371,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double3 GetNormalFloat3_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetNormalFloat3_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetNormalFloat3_64");
         }
         #endregion
 
@@ -382,7 +383,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new normal vector.</param>
         public virtual void SetNormalFloat3_32(ref TPoint point, float3 val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetNormalFloat3_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetNormalFloat3_32");
         }
         /// <summary>
         /// Sets the normal vector of a point cloud point if <see cref="PointNormalType.Double3"/> is true.
@@ -391,7 +392,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new normal vector.</param>
         public virtual void SetNormalFloat3_64(ref TPoint point, double3 val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetNormalFloat3_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetNormalFloat3_64");
         }
         #endregion
 
@@ -406,7 +407,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref sbyte GetColorInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorInt_8");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Short"/> is true.
@@ -414,7 +415,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref short GetColorInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorInt_16");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Int"/> is true.
@@ -422,7 +423,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref int GetColorInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorInt_32");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Long"/> is true.
@@ -430,7 +431,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref long GetColorInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorInt_64");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Byte"/> is true.
@@ -438,7 +439,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref byte GetColorUInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_8");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Ushort"/> is true.
@@ -446,7 +447,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ushort GetColorUInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_16");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Uint"/> is true.
@@ -454,7 +455,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref uint GetColorUInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_32");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Ulong"/> is true.
@@ -462,7 +463,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ulong GetColorUInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorUInt_64");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Float"/> is true.
@@ -470,7 +471,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float GetColorFloat32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorFloat32");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Double"/> is true.
@@ -478,7 +479,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double GetColorFloat64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorFloat64");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Float3"/> is true.
@@ -486,7 +487,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float3 GetColorFloat3_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorFloat3_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorFloat3_32");
         }
         /// <summary>
         /// Returns the normal color of a point cloud point if <see cref="PointColorType.Double3"/> is true.
@@ -494,7 +495,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double3 GetColorFloat3_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetColorFloat3_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetColorFloat3_64");
         }
         #endregion
 
@@ -506,7 +507,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorInt_8(ref TPoint point, sbyte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorInt_8");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Short"/> is true.
@@ -515,7 +516,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorInt_16(ref TPoint point, short val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorInt_16");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Int"/> is true.
@@ -524,7 +525,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorInt_32(ref TPoint point, int val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorInt_32");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Long"/> is true.
@@ -533,7 +534,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorInt_64(ref TPoint point, long val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorInt_64");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Byte"/> is true.
@@ -542,7 +543,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorUInt_8(ref TPoint point, byte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_8");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Ushort"/> is true.
@@ -551,7 +552,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorUInt_16(ref TPoint point, ushort val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_16");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Uint"/> is true.
@@ -560,7 +561,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorUInt_32(ref TPoint point, uint val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_32");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Ulong"/> is true.
@@ -569,7 +570,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorUInt_64(ref TPoint point, ulong val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorUInt_64");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Float"/> is true.
@@ -578,7 +579,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorFloat32(ref TPoint point, float val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorFloat32");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Double"/> is true.
@@ -587,7 +588,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorFloat64(ref TPoint point, double val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorFloat64");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Float3"/> is true.
@@ -596,7 +597,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorFloat3_32(ref TPoint point, float3 val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorFloat3_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorFloat3_32");
         }
         /// <summary>
         /// Sets the color of a point cloud point if <see cref="PointColorType.Double3"/> is true.
@@ -605,7 +606,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new color.</param>
         public virtual void SetColorFloat3_64(ref TPoint point, double3 val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetColorFloat3_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetColorFloat3_64");
         }
         #endregion
 
@@ -620,7 +621,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref sbyte GetLabelInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_8");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Short"/> is true.
@@ -628,7 +629,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref short GetLabelInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_16");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Int"/> is true.
@@ -636,7 +637,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref int GetLabelInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_32");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Long"/> is true.
@@ -644,7 +645,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref long GetLabelInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelInt_64");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Byte"/> is true.
@@ -652,7 +653,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref byte GetLabelUInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_8");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.UShort"/> is true.
@@ -660,7 +661,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ushort GetLabelUInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_16");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.UInt"/> is true.
@@ -668,7 +669,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref uint GetLabelUInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_32");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Long"/> is true.
@@ -676,7 +677,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ulong GetLabelUInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelUInt_64");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Float"/> is true.
@@ -684,7 +685,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float GetLabelFloat32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelFloat32");
         }
         /// <summary>
         /// Returns the label of a point cloud point if <see cref="PointLabelType.Double"/> is true.
@@ -692,7 +693,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double GetLabelFloat64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetLabelFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetLabelFloat64");
         }
         #endregion
 
@@ -704,7 +705,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelInt_8(ref TPoint point, sbyte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_8");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.SByte"/> is true.
@@ -713,7 +714,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelInt_16(ref TPoint point, short val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_16");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.Int"/> is true.
@@ -722,7 +723,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelInt_32(ref TPoint point, int val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_32");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.Long"/> is true.
@@ -731,7 +732,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelInt_64(ref TPoint point, long val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelInt_64");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.Byte"/> is true.
@@ -740,7 +741,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelUInt_8(ref TPoint point, byte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_8");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.UShort"/> is true.
@@ -749,7 +750,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelUInt_16(ref TPoint point, ushort val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_16");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.UInt"/> is true.
@@ -758,7 +759,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelUInt_32(ref TPoint point, uint val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_32");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.ULong"/> is true.
@@ -767,7 +768,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelUInt_64(ref TPoint point, ulong val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelUInt_64");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.Float"/> is true.
@@ -776,7 +777,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelFloat32(ref TPoint point, float val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelFloat32");
         }
         /// <summary>
         /// Sets the label of a point cloud point if <see cref="PointLabelType.Double"/> is true.
@@ -785,7 +786,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new label.</param>
         public virtual void SetLabelFloat64(ref TPoint point, double val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetLabelFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetLabelFloat64");
         }
         #endregion
 
@@ -800,7 +801,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref sbyte GetCurvatureInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_8");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Short"/> is true.
@@ -808,7 +809,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref short GetCurvatureInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_16");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Int"/> is true.
@@ -816,7 +817,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref int GetCurvatureInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_32");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Long"/> is true.
@@ -824,7 +825,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref long GetCurvatureInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureInt_64");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Byte"/> is true.
@@ -832,7 +833,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref byte GetCurvatureUInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_8");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.UShort"/> is true.
@@ -840,7 +841,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ushort GetCurvatureUInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_16");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Uint"/> is true.
@@ -848,7 +849,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref uint GetCurvatureUInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_32");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.ULong"/> is true.
@@ -856,7 +857,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ulong GetCurvatureUInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureUInt_64");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Float"/> is true.
@@ -864,7 +865,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float GetCurvatureFloat32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureFloat32");
         }
         /// <summary>
         /// Returns the curvature of a point cloud point if <see cref="PointCurvatureType.Double"/> is true.
@@ -872,7 +873,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double GetCurvatureFloat64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetCurvatureFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetCurvatureFloat64");
         }
         #endregion
 
@@ -884,7 +885,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureInt_8(ref TPoint point, sbyte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_8");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Short"/> is true.
@@ -893,7 +894,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureInt_16(ref TPoint point, short val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_16");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Int"/> is true.
@@ -902,7 +903,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureInt_32(ref TPoint point, int val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_32");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Long"/> is true.
@@ -911,7 +912,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureInt_64(ref TPoint point, long val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureInt_64");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Byte"/> is true.
@@ -920,7 +921,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureUInt_8(ref TPoint point, byte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_8");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.UShort"/> is true.
@@ -929,7 +930,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureUInt_16(ref TPoint point, ushort val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_16");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Uint"/> is true.
@@ -938,7 +939,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureUInt_32(ref TPoint point, uint val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_32");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.ULong"/> is true.
@@ -947,7 +948,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureUInt_64(ref TPoint point, ulong val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureUInt_64");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Float"/> is true.
@@ -956,7 +957,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureFloat32(ref TPoint point, float val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureFloat32");
         }
         /// <summary>
         /// Sets the curvature of a point cloud point if <see cref="PointCurvatureType.Double"/> is true.
@@ -965,7 +966,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new curvature.</param>
         public virtual void SetCurvatureFloat64(ref TPoint point, double val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetCurvatureFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetCurvatureFloat64");
         }
         #endregion
 
@@ -980,7 +981,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref sbyte GetHitCountInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_8");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Short"/> is true.
@@ -988,7 +989,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref short GetHitCountInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_16");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Int"/> is true.
@@ -996,7 +997,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref int GetHitCountInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_32");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Long"/> is true.
@@ -1004,7 +1005,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref long GetHitCountInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountInt_64");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Byte"/> is true.
@@ -1012,7 +1013,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref byte GetHitCountUInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_8");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.UShort"/> is true.
@@ -1020,7 +1021,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ushort GetHitCountUInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_16");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Int"/> is true.
@@ -1028,7 +1029,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref uint GetHitCountUInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_32");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Long"/> is true.
@@ -1036,7 +1037,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ulong GetHitCountUInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountUInt_64");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Float"/> is true.
@@ -1044,7 +1045,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float GetHitCountFloat32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountFloat32");
         }
         /// <summary>
         /// Returns the hit count of a point cloud point if <see cref="PointHitCountType.Double"/> is true.
@@ -1052,7 +1053,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double GetHitCountFloat64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetHitCountFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetHitCountFloat64");
         }
         #endregion
 
@@ -1064,7 +1065,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountInt_8(ref TPoint point, sbyte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_8");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Short"/> is true.
@@ -1073,7 +1074,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountInt_16(ref TPoint point, short val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_16");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Int"/> is true.
@@ -1082,7 +1083,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountInt_32(ref TPoint point, int val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_32");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Long"/> is true.
@@ -1091,7 +1092,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountInt_64(ref TPoint point, long val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountInt_64");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Byte"/> is true.
@@ -1100,7 +1101,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountUInt_8(ref TPoint point, byte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_8");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.UShort"/> is true.
@@ -1109,7 +1110,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountUInt_16(ref TPoint point, ushort val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_16");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Uint"/> is true.
@@ -1118,7 +1119,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountUInt_32(ref TPoint point, uint val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_32");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.ULong"/> is true.
@@ -1127,7 +1128,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountUInt_64(ref TPoint point, ulong val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountUInt_64");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Float"/> is true.
@@ -1136,7 +1137,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountFloat32(ref TPoint point, float val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountFloat32");
         }
         /// <summary>
         /// Sets the hit count of a point cloud point if <see cref="PointHitCountType.Double"/> is true.
@@ -1145,7 +1146,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new hit count.</param>
         public virtual void SetHitCountFloat64(ref TPoint point, double val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetHitCountFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetHitCountFloat64");
         }
         #endregion
 
@@ -1160,7 +1161,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref sbyte GetGPSTimeInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_8");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Short"/> is true.
@@ -1168,7 +1169,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref short GetGPSTimeInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_16");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Int"/> is true.
@@ -1176,7 +1177,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref int GetGPSTimeInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_32");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Long"/> is true.
@@ -1184,7 +1185,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref long GetGPSTimeInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeInt_64");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Byte"/> is true.
@@ -1192,7 +1193,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref byte GetGPSTimeUInt_8(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_8");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.UShort"/> is true.
@@ -1200,7 +1201,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ushort GetGPSTimeUInt_16(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_16");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Uint"/> is true.
@@ -1208,7 +1209,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref uint GetGPSTimeUInt_32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_32");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.ULong"/> is true.
@@ -1216,7 +1217,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref ulong GetGPSTimeUInt_64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeUInt_64");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Float"/> is true.
@@ -1224,7 +1225,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref float GetGPSTimeFloat32(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeFloat32");
         }
         /// <summary>
         /// Returns the GPS time of a point cloud point if <see cref="PointGpsTimeType.Double"/> is true.
@@ -1232,7 +1233,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="point">The point cloud point.</param>
         public virtual ref double GetGPSTimeFloat64(ref TPoint point)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support GetGPSTimeFloat64");
         }
         #endregion
 
@@ -1244,7 +1245,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeInt_8(ref TPoint point, sbyte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_8");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Short"/> is true.
@@ -1253,7 +1254,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeInt_16(ref TPoint point, short val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_16");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Int"/> is true.
@@ -1262,7 +1263,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeInt_32(ref TPoint point, int val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_32");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Long"/> is true.
@@ -1271,7 +1272,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeInt_64(ref TPoint point, long val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeInt_64");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Byte"/> is true.
@@ -1280,7 +1281,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeUInt_8(ref TPoint point, byte val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_8");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_8");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.UShort"/> is true.
@@ -1289,7 +1290,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeUInt_16(ref TPoint point, ushort val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_16");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_16");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Uint"/> is true.
@@ -1298,7 +1299,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeUInt_32(ref TPoint point, uint val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_32");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.ULong"/> is true.
@@ -1307,7 +1308,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeUInt_64(ref TPoint point, ulong val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeUInt_64");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Float"/> is true.
@@ -1316,7 +1317,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeFloat32(ref TPoint point, float val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeFloat32");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeFloat32");
         }
         /// <summary>
         /// Sets the GPS time of a point cloud point if <see cref="PointGpsTimeType.Double"/> is true.
@@ -1325,7 +1326,7 @@ namespace Fusee.PointCloud.Core.Accessors
         /// <param name="val">The new GPS time.</param>
         public virtual void SetGPSTimeFloat64(ref TPoint point, double val)
         {
-            throw new NotSupportedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeFloat64");
+            throw new NotImplementedException($"Point {typeof(TPoint).Name} does not support SetGPSTimeFloat64");
         }
         #endregion
 

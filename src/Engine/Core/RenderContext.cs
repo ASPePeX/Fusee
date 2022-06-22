@@ -4,6 +4,7 @@ using Fusee.Engine.Core.Effects;
 using Fusee.Engine.Core.Scene;
 using Fusee.Engine.Core.ShaderShards;
 using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1003,10 +1004,10 @@ namespace Fusee.Engine.Core
         public void SetEffect(Effect ef, bool renderForward = true)
         {
             if (_rci == null)
-                throw new NullReferenceException("No render context Implementation found!");
+                ThrowHelper.ThrowArgumentNullException("No render context Implementation found!");
 
             if (ef == null)
-                throw new NullReferenceException("No Effect found!");
+                ThrowHelper.ThrowArgumentNullException("No Effect found!");
 
             // Is this shader effect already built?
             if (_effectManager.GetEffect(ef) == null)
@@ -1025,7 +1026,7 @@ namespace Fusee.Engine.Core
         internal void CreateShaderProgram(Effect ef, bool renderForward = true)
         {
             if (ef == null)
-                throw new NullReferenceException("No Effect found!");
+                ThrowHelper.ThrowArgumentNullException("No Effect found!");
 
             // Is this shader effect already built?
             var fx = _effectManager.GetEffect(ef);
@@ -1038,7 +1039,7 @@ namespace Fusee.Engine.Core
             }
 
             if (_rci == null)
-                throw new NullReferenceException("No render context Implementation found!");
+                ThrowHelper.ThrowArgumentNullException("No render context Implementation found!");
 
             var compiledEffect = new CompiledEffect();
             var shaderParams = new Dictionary<int, ShaderParamInfo>();
@@ -1101,7 +1102,7 @@ namespace Fusee.Engine.Core
                     {
                         var ex = new Exception();
                         Diagnostics.Error("Error while compiling shader for pass - couldn't get parameters form the gpu!", ex, new string[] { vert, geom, frag }); ;
-                        throw new Exception("Error while compiling shader for pass.", ex);
+                        ThrowHelper.ThrowExternalException("Error while compiling shader for pass.", ex);
                     }
 
                     foreach (var param in activeUniforms)
@@ -1115,7 +1116,7 @@ namespace Fusee.Engine.Core
                 catch (Exception ex)
                 {
                     Diagnostics.Error("Error while compiling shader ", ex, new string[] { vert, geom, frag });
-                    throw new Exception($"Error while compiling shader\n{vert}\n{geom}\n{frag}", ex);
+                    ThrowHelper.ThrowExternalException($"Error while compiling shader\n{vert}\n{geom}\n{frag}", ex);
                 }
             }
             else
@@ -1134,7 +1135,7 @@ namespace Fusee.Engine.Core
                     {
                         var ex = new Exception();
                         Diagnostics.Error("Error while compiling shader for pass - couldn't get parameters form the gpu!", ex, new string[] { cs }); ;
-                        throw new Exception("Error while compiling shader for pass.", ex);
+                        ThrowHelper.ThrowExternalException("Error while compiling shader for pass.", ex);
                     }
 
                     foreach (var param in activeUniforms)
@@ -1154,7 +1155,7 @@ namespace Fusee.Engine.Core
                 catch (Exception ex)
                 {
                     Diagnostics.Error("Error while compiling shader ", ex, new string[] { cs });
-                    throw new Exception("Error while compiling shader ", ex);
+                    ThrowHelper.ThrowExternalException("Error while compiling shader ", ex);
                 }
             }
 
@@ -1202,7 +1203,7 @@ namespace Fusee.Engine.Core
         private void CreateAllEffectVariables(Effect ef, CompiledEffect cFx, Dictionary<int, ShaderParamInfo> activeUniforms)
         {
             if (cFx.ActiveUniforms.Count != 0)
-                throw new ArgumentException("The compiled effect already has parameters!");
+                ThrowHelper.ThrowArgumentException("The compiled effect already has parameters!");
 
             //Iterate source shader's active params and create a EffectParam for each one.
             foreach (var shaderParam in activeUniforms)
@@ -1268,7 +1269,7 @@ namespace Fusee.Engine.Core
         /// <param name="paramValue">The parameter's value.</param>
         internal void UpdateParameterInCompiledEffect(Effect ef, int hash, object paramValue)
         {
-            if (!_allCompiledEffects.TryGetValue(ef, out CompiledEffects compiledEffects)) throw new ArgumentException("Effect isn't build yet!");
+            if (!_allCompiledEffects.TryGetValue(ef, out CompiledEffects compiledEffects)) ThrowHelper.ThrowArgumentException("Effect isn't build yet!");
 
             var forwardFx = compiledEffects.ForwardFx;
             if (forwardFx != null)
@@ -1781,8 +1782,8 @@ namespace Fusee.Engine.Core
         /// <param name="threadGroupsZ">he number of work groups to be launched in the Z dimension.</param>
         public void DispatchCompute(int kernelIndex, int threadGroupsX, int threadGroupsY, int threadGroupsZ)
         {
-            if (_currentEffect == null) throw new NullReferenceException("No Compute Shader bound.");
-            if (_currentEffect.GetType() != typeof(ComputeShader)) throw new NullReferenceException("Bound Effect isn't a Compute Shader.");
+            if (_currentEffect == null) ThrowHelper.ThrowArgumentNullException("No Compute Shader bound.");
+            if (_currentEffect.GetType() != typeof(ComputeShader)) ThrowHelper.ThrowArgumentNullException("Bound Effect isn't a Compute Shader.");
 
             try
             {
@@ -1801,7 +1802,7 @@ namespace Fusee.Engine.Core
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while rendering pass ", ex);
+                ThrowHelper.ThrowExternalException("Error while rendering pass ", ex);
             }
         }
 

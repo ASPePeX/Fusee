@@ -1,4 +1,5 @@
 using Fusee.Engine.Common;
+using Microsoft.Toolkit.Diagnostics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -20,14 +21,14 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         public RenderCanvasInputDriverImp(IRenderCanvasImp renderCanvas)
         {
             if (renderCanvas == null)
-                throw new ArgumentNullException(nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
 
             if (!(renderCanvas is RenderCanvasImp))
-                throw new ArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
+                ThrowHelper.ThrowArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
 
             _gameWindow = ((RenderCanvasImp)renderCanvas)._gameWindow;
             if (_gameWindow == null)
-                throw new ArgumentNullException(nameof(_gameWindow));
+                ThrowHelper.ThrowArgumentNullException(nameof(_gameWindow));
 
             _keyboard = new KeyboardDeviceImp(_gameWindow);
             _mouse = new MouseDeviceImp(_gameWindow);
@@ -668,7 +669,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <returns>No return, always throws.</returns>
         public float GetAxis(int iAxisId)
         {
-            throw new InvalidOperationException($"Unsupported axis {iAxisId}. This device does not support any axis at all.");
+            return ThrowHelper.ThrowInvalidOperationException<float>($"Unsupported axis {iAxisId}. This device does not support any axis at all.");
         }
 
         /// <summary>
@@ -679,7 +680,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <returns>No return, always throws.</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException($"Button {iButtonId} does not exist or is no pollable. Listen to the ButtonValueChanged event to receive keyboard notifications from this device.");
+            return ThrowHelper.ThrowInvalidOperationException<bool>($"Button {iButtonId} does not exist or is no pollable. Listen to the ButtonValueChanged event to receive keyboard notifications from this device.");
         }
     }
 
@@ -904,7 +905,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
                 (int)MouseAxes.MaxX => _gameWindow.Size.X,
                 (int)MouseAxes.MinY => 0,
                 (int)MouseAxes.MaxY => _gameWindow.Size.Y,
-                _ => throw new InvalidOperationException($"Unknown axis {iAxisId}. Cannot get value for unknown axis."),
+                _ => ThrowHelper.ThrowInvalidOperationException<int>($"Unknown axis {iAxisId}. Cannot get value for unknown axis."),
             };
         }
 
@@ -929,7 +930,7 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <returns>No return, always throws.</returns>
         public bool GetButton(int iButtonId)
         {
-            throw new InvalidOperationException(
+            return ThrowHelper.ThrowInvalidOperationException<bool>(
                 $"Unsupported axis {iButtonId}. This device does not support any to-be polled axes at all.");
         }
 

@@ -1,7 +1,7 @@
 using Fusee.Base.Common;
 using Fusee.Engine.Common;
 using Fusee.Engine.Core.Scene;
-using System;
+using Microsoft.Toolkit.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
 
@@ -112,7 +112,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
             }
             else if (!setup.HasFlag(ShadingModel.Unlit))
             {
-                throw new ArgumentOutOfRangeException($"Lighting setup unknown or incorrect: {setup}");
+                ThrowHelper.ThrowArgumentOutOfRangeException($"Lighting setup unknown or incorrect: {setup}");
             }
 
             lighting.Add(ApplyLightForward(setup));
@@ -517,7 +517,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
         {
             var methodBody = new List<string>();
 
-            if (setup != ShadingModel.Edl && setup != ShadingModel.Unlit)
+            if (setup is not ShadingModel.Edl and not ShadingModel.Unlit)
             {
                 methodBody.Add("float lightStrength = (1.0 - ambientCo) * light.strength;");
                 methodBody.AddRange(ViewAndLightDir());
@@ -621,7 +621,8 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                         break;
                     }
                 default:
-                    throw new InvalidOperationException("Invalid ShadingModel!");
+                    ThrowHelper.ThrowInvalidOperationException("Invalid ShadingModel!");
+                    break;
             }
 
             return GLSL.CreateMethod(GLSL.Type.Vec3, "ApplyLight",
@@ -805,7 +806,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
             "}",
             "else if(decodedShadingModel == uint(3))",
             "{",
-                // diffuse 
+                // diffuse
                 $"float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);",
                 $"float NdotV = clamp(dot(normal, viewDir), 0.0, 1.0);",
                 $"diffuse = OrenNayarDiffuseLighting(albedo.rgb, NdotL, NdotV, normal, lightDir, viewDir, 0.5);",
@@ -1096,7 +1097,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                 int thisFragmentsFirstCascade = -1;
                 int thisFragmentsSecondCascade = -1;
                 float fragDepth = fragPos.z;
-                
+
                 ");
 
                 frag.AppendLine($"int numberOfCascades = {numberOfCascades};");
@@ -1106,7 +1107,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                     vec2 cp1 = LightMatClipPlanes[i];
                     if(fragDepth < cp1.y)
                     {
-                        thisFragmentsFirstCascade = i;  
+                        thisFragmentsFirstCascade = i;
                         if(i + 1 <= numberOfCascades - 1)
                         {
                             vec2 cp2 = LightMatClipPlanes[i+1];
@@ -1125,15 +1126,15 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                 ");
                 frag.AppendLine($"vec4 posInLightSpace1 = (LightSpaceMatrices[thisFragmentsFirstCascade] * {UniformNameDeclarations.IView}) * fragPos;");
                 frag.Append(@"
-                    float shadow1 = ShadowCalculation(ShadowMap, thisFragmentsFirstCascade, posInLightSpace1, normal, lightDir,  light.bias, 1.0);                   
+                    float shadow1 = ShadowCalculation(ShadowMap, thisFragmentsFirstCascade, posInLightSpace1, normal, lightDir,  light.bias, 1.0);
                     //blend cascades to avoid hard cuts between them
                     if(thisFragmentsSecondCascade != -1)
-                    {  
-                        float blendStartPercent = max(85.0 - (5.0 * float(thisFragmentsFirstCascade-1)), 50.0); //the farther away the cascade, the earlier we blend the shadow maps        
+                    {
+                        float blendStartPercent = max(85.0 - (5.0 * float(thisFragmentsFirstCascade-1)), 50.0); //the farther away the cascade, the earlier we blend the shadow maps
                     ");
                 frag.AppendLine($"vec4 posInLightSpace2 = (LightSpaceMatrices[thisFragmentsSecondCascade] * {UniformNameDeclarations.IView}) * fragPos;");
                 frag.Append(@"
-                        float shadow2 = ShadowCalculation(ShadowMap, thisFragmentsSecondCascade, posInLightSpace2, normal, lightDir, light.bias, 1.0);    
+                        float shadow2 = ShadowCalculation(ShadowMap, thisFragmentsSecondCascade, posInLightSpace2, normal, lightDir, light.bias, 1.0);
                         float z = LightMatClipPlanes[thisFragmentsFirstCascade].y - LightMatClipPlanes[thisFragmentsFirstCascade].x;
                         float percent = (100.0/z * (fragDepth - LightMatClipPlanes[thisFragmentsFirstCascade].x));
                         float percentNormalized = (percent - blendStartPercent) / (100.0 - blendStartPercent);
@@ -1142,9 +1143,9 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                         else
                             shadow = shadow1;
                     }
-                    else                    
+                    else
                         shadow = shadow1;
-                }                              
+                }
                 ");
             }
             else
@@ -1152,20 +1153,20 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                 if (lc.Type != LightType.Point)
                 {
                     frag.Append(@"
-                    // shadow                
+                    // shadow
                     if (light.isCastingShadows == 1)
                     {
                     ");
                     frag.AppendLine($"  vec4 posInLightSpace = ({UniformNameDeclarations.LightSpaceMatrix} * {UniformNameDeclarations.IView}) * fragPos;");
                     frag.Append(@"
-                        shadow = ShadowCalculation(ShadowMap, posInLightSpace, normal, lightDir, light.bias, 1.0);                    
-                    }                
+                        shadow = ShadowCalculation(ShadowMap, posInLightSpace, normal, lightDir, light.bias, 1.0);
+                    }
                     ");
                 }
                 else
                 {
                     frag.Append(@"
-                    // shadow       
+                    // shadow
                     if (light.isCastingShadows == 1)
                     {
                     ");
@@ -1180,7 +1181,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
         private static string ColorDebugCascades()
         {
             var frag = new StringBuilder();
-            frag.Append(@"                     
+            frag.Append(@"
             vec3 cascadeColor1 = vec3(0.0,0.0,0.0);
             vec3 cascadeColor2 = vec3(0.0,0.0,0.0);
             vec3 cascadeColor = vec3(1.0,1.0,1.0);
@@ -1212,7 +1213,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
             {
                 float blendStartPercent = max(85.0 - (5.0 * float(thisFragmentsFirstCascade -1)), 50.0); //the farther away the cascade, the earlier we blend the shadow maps");
             frag.AppendLine($"    float z = {UniformNameDeclarations.LightMatClipPlanes}[thisFragmentsFirstCascade].y;");
-            frag.Append(@"                     
+            frag.Append(@"
                 float percent = (100.0/z * fragDepth);
                 float percentNormalized = (percent - blendStartPercent) / (100.0 - blendStartPercent);
                 if(percent >= blendStartPercent)
@@ -1225,7 +1226,7 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
                 cascadeColor = cascadeColor1;
             }
             lighting *= cascadeColor;
-                      
+
                 ");
             return frag.ToString();
         }

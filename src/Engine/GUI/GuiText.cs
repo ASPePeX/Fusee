@@ -4,6 +4,8 @@ using Fusee.Engine.Core.Scene;
 using Fusee.Math.Core;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
+
 using System.Linq;
 
 namespace Fusee.Engine.Gui
@@ -52,7 +54,7 @@ namespace Fusee.Engine.Gui
         public List<List<float2>> LineUVs { get; private set; }
 
         /// <summary>
-        /// Defines the <see cref="HorizontalAlignment"/> of the text. 
+        /// Defines the <see cref="HorizontalAlignment"/> of the text.
         /// This is needed here because it changes the shape of the mesh.
         /// The mesh's vertices will be recalculated the value is set.
         /// </summary>
@@ -77,7 +79,7 @@ namespace Fusee.Engine.Gui
         /// </summary>
         public float Height { get; private set; }
 
-        //The min and max coordinates of the bounding box, as received from the font imp.      
+        //The min and max coordinates of the bounding box, as received from the font imp.
         private float2 _min;
         private float2 _max;
 
@@ -86,7 +88,7 @@ namespace Fusee.Engine.Gui
         /// </summary>
         /// <param name="fontMap"></param>
         /// <param name="text"></param>
-        /// <param name="horizontalAlignment">Defines the <see cref="HorizontalAlignment"/> of the text. 
+        /// <param name="horizontalAlignment">Defines the <see cref="HorizontalAlignment"/> of the text.
         /// This is needed here because it changes the shape of the mesh.</param>
         public GuiText(FontMap fontMap, string text, HorizontalTextAlignment horizontalAlignment)
         {
@@ -168,8 +170,8 @@ namespace Fusee.Engine.Gui
 
         private void CreateTextMesh()
         {
-            if (_fontMap == null)
-                throw new ArgumentException("Can not create Text Mesh - FontMap not found!");
+            // Can not create Text Mesh - FontMap not found!
+            Guard.IsNotNull(_fontMap, nameof(_fontMap));
 
             LineVertices = new List<List<float3>>();
             LineTriangles = new List<List<ushort>>();
@@ -189,7 +191,7 @@ namespace Fusee.Engine.Gui
             var advanceX = 0f;
             var advanceY = 0f;
 
-            var lineBreakOffset = _fontMap.PixelHeight * 1.5f; //TODO: add user-field. At the moment we have a fixed line height of 150% of pixel height, 
+            var lineBreakOffset = _fontMap.PixelHeight * 1.5f; //TODO: add user-field. At the moment we have a fixed line height of 150% of pixel height,
             var lineCnt = 0;
 
             _min = float2.One * float.MaxValue;

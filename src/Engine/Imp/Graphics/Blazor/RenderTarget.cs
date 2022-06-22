@@ -2,6 +2,7 @@
 using Fusee.Engine.Common;
 using Fusee.Engine.Core;
 using System;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Imp.Blazor
 {
@@ -61,8 +62,9 @@ namespace Fusee.Engine.Imp.Blazor
         /// <param name="tex">The type of the texture.</param>
         public void SetTextureFromRenderTarget(IRenderTarget src, RenderTargetTextureTypes tex)
         {
+            Guard.IsNotNull(src, nameof(src));
             IWritableTexture srcTex = src.RenderTextures[(int)tex];
-            RenderTextures[(int)tex] = srcTex ?? throw new ArgumentException("Texture from source target is null!");
+            RenderTextures[(int)tex] = srcTex;
         }
 
         /// <summary>
@@ -72,7 +74,8 @@ namespace Fusee.Engine.Imp.Blazor
         /// <param name="tex">The type of the texture.</param>
         public void SetTexture(IWritableTexture src, RenderTargetTextureTypes tex)
         {
-            RenderTextures[(int)tex] = src ?? throw new ArgumentException("Texture from source target is null!");
+            Guard.IsNotNull(src, nameof(src));
+            RenderTextures[(int)tex] = src;
         }
 
         /// <summary>

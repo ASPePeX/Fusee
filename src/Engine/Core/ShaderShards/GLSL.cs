@@ -1,4 +1,5 @@
 ﻿using Fusee.Math.Core;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 
@@ -164,7 +165,7 @@ namespace Fusee.Engine.Core.ShaderShards
             if ((type.IsValueType && !type.IsPrimitive) || type.IsClass) // => user-defined struct or class
                 return type.Name;
             else
-                throw new ArgumentException($"Cannot parse type {type.Name} ");
+                return ThrowHelper.ThrowArgumentException<string>($"Cannot parse type {type.Name} ");
         }
 
         public static string DecodeType(Type type)
@@ -187,7 +188,7 @@ namespace Fusee.Engine.Core.ShaderShards
                 Type.Sampler2DShadow => "highp sampler2DShadow",
                 Type.SamplerCubeShadow => "highp samplerCubeShadow",
                 Type.ArrayTextureShadow => "highp sampler2DArrayShadow",
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null),
+                _ => ThrowHelper.ThrowArgumentOutOfRangeException<string>(nameof(type), type, null),
             };
         }
 

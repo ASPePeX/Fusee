@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Xirkit
 {
@@ -9,8 +10,8 @@ namespace Fusee.Xirkit
     /// Major building block of the Xirkit library. Each <see cref="Circuit"/> contains Node instances.
     /// </para>
     /// <para>
-    /// A single object instance of any type can be hosted inside a node. This way any arbitrary object 
-    /// can participate in a Circuit. Node instances within a <see cref="Circuit"/> are interconnected 
+    /// A single object instance of any type can be hosted inside a node. This way any arbitrary object
+    /// can participate in a Circuit. Node instances within a <see cref="Circuit"/> are interconnected
     /// using in-pins and out-pins.
     /// The internal connection from pins to actual members (properties and fields) of the contained object
     /// are done using <see cref="IMemberAccessor{T}"/>s.
@@ -60,7 +61,7 @@ namespace Fusee.Xirkit
         public Node(object o)
         {
             if (!o.GetType().IsClass)
-                throw new ArgumentException("Not a reference type.", nameof(o));
+                ThrowHelper.ThrowArgumentException("Not a reference type.", nameof(o));
 
             _o = o;
             _cp = o as ICalculationPerformer;
@@ -88,7 +89,7 @@ namespace Fusee.Xirkit
         }
 
         /// <summary>
-        /// Attaches this Node's object's member (specified by thisMember) as outgoing pin to the specified member of the object hosted by the other node. 
+        /// Attaches this Node's object's member (specified by thisMember) as outgoing pin to the specified member of the object hosted by the other node.
         /// A member can be any field or property.
         /// </summary>
         /// <param name="thisMemberOut">The member of this node emitting values.</param>
@@ -126,7 +127,7 @@ namespace Fusee.Xirkit
         /// <summary>
         /// Create a new in-pin for the given member (field or property). If the member is already exposed by an in-pin
         /// an exception is thrown because a member cannot be governed by two in-pins. If a non-null target type is specified,
-        /// the member will be connected to the pin using <see cref="ConvertingFieldAccessor{TPin,TObj}"/> or 
+        /// the member will be connected to the pin using <see cref="ConvertingFieldAccessor{TPin,TObj}"/> or
         /// <see cref="ConvertingPropertyAccessor{TPin,TObj}"/>.
         /// </summary>
         /// <param name="member">The member.</param>

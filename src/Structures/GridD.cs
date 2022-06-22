@@ -1,6 +1,7 @@
 using Fusee.Math.Core;
 using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Structures
 {
@@ -142,7 +143,7 @@ namespace Fusee.Structures
             if (indexX < 0 || indexX >= NumberOfGridCells.x ||
                 indexY < 0 || indexY >= NumberOfGridCells.y ||
                 indexZ < 0 || indexZ >= NumberOfGridCells.z)
-                throw new ArgumentOutOfRangeException($"Position {pos} does not lie inside the grid!");
+                ThrowHelper.ThrowArgumentOutOfRangeException($"Position {pos} does not lie inside the grid!");
 
             cellIdx = new int3(indexX, indexY, indexZ);
 
@@ -151,7 +152,7 @@ namespace Fusee.Structures
         }
 
         /// <summary>
-        /// Gets the indices of the direct or indirect neighbor. 
+        /// Gets the indices of the direct or indirect neighbor.
         /// </summary>
         /// <param name="startIdx">The index of the cell we want to get the neighbors for.</param>
         /// <param name="dist">The distance to the neighbors. Default is 1 - this will get the direct neighbors.</param>

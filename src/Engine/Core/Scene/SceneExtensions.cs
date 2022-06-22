@@ -3,6 +3,7 @@ using Fusee.Xene;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Engine.Core.Scene
 {
@@ -16,7 +17,7 @@ namespace Fusee.Engine.Core.Scene
         /// Finds all components matching a given search predicate within the given node.
         /// </summary>
         /// <remarks>
-        /// Narrows the generic parameters of <see cref="Fusee.Xene.SceneFinderExtensions.FindComponents{TNode, TComponent}(TNode, Predicate{TComponent})"/> 
+        /// Narrows the generic parameters of <see cref="Fusee.Xene.SceneFinderExtensions.FindComponents{TNode, TComponent}(TNode, Predicate{TComponent})"/>
         /// to the concrete Types <see cref="SceneNode"/> and <see cref="SceneComponent"/>.
         /// </remarks>
         /// <param name="root">The root node where to start the traversal.</param>
@@ -42,7 +43,7 @@ namespace Fusee.Engine.Core.Scene
         /// Finds all components of a certain type matching a given search predicate within the given node.
         /// </summary>
         /// <remarks>
-        /// Narrows the generic parameters of <see cref="Fusee.Xene.SceneFinderExtensions.FindComponents{TNode, TComponent}(TNode, Predicate{TComponent})"/> 
+        /// Narrows the generic parameters of <see cref="Fusee.Xene.SceneFinderExtensions.FindComponents{TNode, TComponent}(TNode, Predicate{TComponent})"/>
         /// to the concrete Types <see cref="SceneNode"/> and <see cref="SceneComponent"/>.
         /// </remarks>
         /// <param name="root">The root node where to start the traversal.</param>
@@ -89,7 +90,7 @@ namespace Fusee.Engine.Core.Scene
         }
 
         /// <summary>
-        /// Returns the global transformation matrix as the product of all transformations along the scene graph branch this SceneNode is a part of. 
+        /// Returns the global transformation matrix as the product of all transformations along the scene graph branch this SceneNode is a part of.
         /// </summary>
         public static float4x4 GetGlobalTransformation(this SceneNode snThis)
         {
@@ -102,7 +103,7 @@ namespace Fusee.Engine.Core.Scene
         }
 
         /// <summary>
-        /// Returns the global rotation matrix as the product of all rotations along the scene graph branch this SceneNode is a part of. 
+        /// Returns the global rotation matrix as the product of all rotations along the scene graph branch this SceneNode is a part of.
         /// </summary>
         public static float4x4 GetGlobalRotation(this SceneNode snThis)
         {
@@ -111,7 +112,7 @@ namespace Fusee.Engine.Core.Scene
         }
 
         /// <summary>
-        /// Returns the global translation as the product of all translations along the scene graph branch this SceneNode is a part of. 
+        /// Returns the global translation as the product of all translations along the scene graph branch this SceneNode is a part of.
         /// </summary>
         public static float3 GetGlobalTranslation(this SceneNode snThis)
         {
@@ -120,7 +121,7 @@ namespace Fusee.Engine.Core.Scene
         }
 
         /// <summary>
-        /// Returns the global scale as the product of all scaling along the scene graph branch this SceneNode is a part of. 
+        /// Returns the global scale as the product of all scaling along the scene graph branch this SceneNode is a part of.
         /// </summary>
         public static float3 GetGlobalScale(this SceneNode snThis)
         {
@@ -151,7 +152,7 @@ namespace Fusee.Engine.Core.Scene
         }
 
         /// <summary>
-        /// Get the local transformation matrix from this TransformationComponent. 
+        /// Get the local transformation matrix from this TransformationComponent.
         /// </summary>
         public static float4x4 GetLocalTransformation(this Transform tansThis)
         {
@@ -159,7 +160,7 @@ namespace Fusee.Engine.Core.Scene
         }
 
         /// <summary>
-        /// Get the local transformation matrix from this TransformationComponent. 
+        /// Get the local transformation matrix from this TransformationComponent.
         /// </summary>
         public static float4x4 GetLocalTranslation(this Transform tansThis)
         {
@@ -175,7 +176,7 @@ namespace Fusee.Engine.Core.Scene
         public static void RemoveComponentsInChildren(this SceneNode snThisThis, Type type)
         {
             if (snThisThis == null || type == null)
-                throw new ArgumentException("SceneNode or type is null!");
+                ThrowHelper.ThrowArgumentException("SceneNode or type is null!");
 
             foreach (var child in snThisThis.Children)
             {
@@ -211,7 +212,7 @@ namespace Fusee.Engine.Core.Scene
         public static IEnumerable<SceneComponent> GetComponentsInChildren(this SceneNode snThisThis, Type type)
         {
             if (snThisThis == null || type == null)
-                throw new ArgumentException("SceneNode or type is null!");
+                ThrowHelper.ThrowArgumentException("SceneNode or type is null!");
 
             foreach (var child in snThisThis.Children)
             {
@@ -272,7 +273,7 @@ namespace Fusee.Engine.Core.Scene
         public static void RemoveComponent(this SceneNode snThisThis, Type type, int inx = 0)
         {
             if (snThisThis == null || snThisThis.Components == null || type == null)
-                throw new ArgumentException("SceneNode or type is null!");
+                ThrowHelper.ThrowArgumentException("SceneNode or type is null!");
 
             var inxC = 0;
             for (var i = 0; i < snThisThis.Components.Count; i++)
@@ -291,7 +292,7 @@ namespace Fusee.Engine.Core.Scene
         /// <summary>
         /// Finds the components with the specified type in this scene node container.
         /// </summary>
-        /// <param name="snThisThis">This scene node container.</param>       
+        /// <param name="snThisThis">This scene node container.</param>
         /// <returns>A component of the specified type, if contained within the given container, null otherwise.</returns>
         public static IEnumerable<TComp> GetComponents<TComp>(this SceneNode snThisThis) where TComp : SceneComponent
         {
@@ -302,7 +303,7 @@ namespace Fusee.Engine.Core.Scene
         /// Finds the components with the specified type in this scene node container.
         /// </summary>
         /// <param name="snThisThis">This scene node container.</param>
-        /// <param name="type">The type of the component to look for.</param>        
+        /// <param name="type">The type of the component to look for.</param>
         public static IEnumerable<SceneComponent> GetComponents(this SceneNode snThisThis, Type type)
         {
             foreach (var cont in snThisThis.Components)

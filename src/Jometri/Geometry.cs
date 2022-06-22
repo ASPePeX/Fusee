@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Jometri
 {
@@ -160,7 +161,7 @@ namespace Fusee.Jometri
             {
                 return DictVertices[vHandle];
             }
-            throw new ArgumentException("Vertex with id " + vHandle + " not found!");
+            return ThrowHelper.ThrowArgumentException<Vertex>("Vertex with id " + vHandle + " not found!");
         }
 
         internal HalfEdge GetHalfEdgeByHandle(int hehandle)
@@ -169,7 +170,7 @@ namespace Fusee.Jometri
             {
                 return DictHalfEdges[hehandle];
             }
-            throw new ArgumentException("HalfEdge with id " + hehandle + " not found!");
+            return ThrowHelper.ThrowArgumentException<HalfEdge>("HalfEdge with id " + hehandle + " not found!");
         }
 
         internal Face GetFaceByHandle(int fHandle)
@@ -178,7 +179,7 @@ namespace Fusee.Jometri
             {
                 return DictFaces[fHandle];
             }
-            throw new ArgumentException("Face with id " + fHandle + " not found!");
+            return ThrowHelper.ThrowArgumentException<Face>("Face with id " + fHandle + " not found!");
         }
 
         #endregion
@@ -223,7 +224,7 @@ namespace Fusee.Jometri
 
         #endregion
 
-        #region circulators 
+        #region circulators
 
         /// <summary>
         /// This collection contains all vertices neighboring a given Vertex.
@@ -596,7 +597,7 @@ namespace Fusee.Jometri
                 }
                 return face;
             }
-            throw new ArgumentException("Vertex " + p + " vertex " + q + " have no common Face!");
+            return ThrowHelper.ThrowArgumentException<Face>("Vertex " + p + " vertex " + q + " have no common Face!");
         }
         #endregion
     }

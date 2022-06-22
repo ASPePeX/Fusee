@@ -2,6 +2,7 @@
 using Android.Util;
 using Android.Views;
 using Fusee.Engine.Common;
+using Microsoft.Toolkit.Diagnostics;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.ES30;
@@ -424,7 +425,7 @@ namespace Fusee.Engine.Imp.Graphics.Android
 
                 if (major < 2)
                 {
-                    throw new InvalidOperationException("You need at least OpenGL 2.0 to run this example. GLSL not supported.");
+                    ThrowHelper.ThrowInvalidOperationException("You need at least OpenGL 2.0 to run this example. GLSL not supported.");
                 }
 
                 GL.ClearColor(0, 0.3f, 0.1f, 1);
@@ -470,7 +471,7 @@ namespace Fusee.Engine.Imp.Graphics.Android
                 _renderCanvasImp.DoRender();
         }
 
-        // This method is called every time the context needs to be recreated. 
+        // This method is called every time the context needs to be recreated.
         //Use it to set any egl-specific settings prior to context creation.
         protected override void CreateFrameBuffer()
         {

@@ -7,6 +7,7 @@ using Fusee.Engine.Core.Scene;
 using Fusee.Engine.Core.ShaderShards;
 using Fusee.Math.Core;
 using Fusee.Xene;
+using Microsoft.Toolkit.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -264,8 +265,8 @@ namespace Fusee.Engine.Core
 
         private ShadowParams CreateShadowParams(LightResult lr, Tuple<SceneNode, Light> key)
         {
-            float4x4[] lightSpaceMatrices;
-            List<FrustumF> frustums;
+            float4x4[] lightSpaceMatrices = new float4x4[] { };
+            List<FrustumF> frustums = new();
             var shadowParamClipPlanes = new float2[NumberOfCascades];
 
             //1. Calculate light space matrices and clip planes
@@ -284,7 +285,7 @@ namespace Fusee.Engine.Core
                         var lightView = float4x4.LookAt(lightPos, target, float3.Normalize(lr.Rotation * float3.UnitY));
 
                         float tmpLambda;
-                        if (PssmLambda > 1 || PssmLambda < 0)
+                        if (PssmLambda is > 1 or < 0)
                         {
                             tmpLambda = M.Clamp(PssmLambda, 0, 1);
                             Diagnostics.Warn("Lambda is > 1 or < 0 and is therefor camped between 0 and 1.");
@@ -393,7 +394,8 @@ namespace Fusee.Engine.Core
                         break;
                     }
                 default:
-                    throw new ArgumentException("No Light Space Matrix created, light type not supported!");
+                    ThrowHelper.ThrowArgumentException("No Light Space Matrix created, light type not supported!");
+                    break;
             }
 
             //2. If we haven't created the shadow parameters for this light yet, do so,
@@ -411,13 +413,13 @@ namespace Fusee.Engine.Core
                     case LightType.Legacy:
                     case LightType.Parallel:
                         {
-                            IWritableTexture shadowMap;
+                            IWritableTexture shadowMap = null;
                             if (NumberOfCascades == 1)
                                 shadowMap = new WritableTexture(RenderTargetTextureTypes.Depth, new ImagePixelFormat(ColorFormat.Depth24), (int)ShadowMapRes, (int)ShadowMapRes, false, TextureFilterMode.Nearest, TextureWrapMode.ClampToBorder, TextureCompareMode.CompareRefToTexture, Compare.Less);
                             else if (NumberOfCascades > 1)
                                 shadowMap = new WritableArrayTexture(NumberOfCascades, RenderTargetTextureTypes.Depth, new ImagePixelFormat(ColorFormat.Depth16), (int)ShadowMapRes, (int)ShadowMapRes, false, TextureFilterMode.Nearest, TextureWrapMode.ClampToBorder, TextureCompareMode.CompareRefToTexture, Compare.Less);
                             else
-                                throw new ArgumentException($"Number of shadow cascades is {NumberOfCascades} but must be greater or equal 1.");
+                                ThrowHelper.ThrowArgumentException($"Number of shadow cascades is {NumberOfCascades} but must be greater or equal 1.");
 
                             outParams = new ShadowParams() { ClipPlanesForLightMat = shadowParamClipPlanes, LightSpaceMatrices = lightSpaceMatrices, ShadowMap = shadowMap, Frustums = frustums };
                             break;
@@ -429,7 +431,8 @@ namespace Fusee.Engine.Core
                             break;
                         }
                     default:
-                        throw new ArgumentException("Invalid light type.");
+                        ThrowHelper.ThrowArgumentException("Invalid light type.");
+                        break;
                 }
 
                 _shadowparams.Add(key, outParams);
@@ -779,7 +782,7 @@ namespace Fusee.Engine.Core
                                 }
                             }
                             else
-                                throw new ArgumentException($"Number of cascades must be greater or equal 1 but is  {NumberOfCascades}.");
+                                ThrowHelper.ThrowArgumentException($"Number of cascades must be greater or equal 1 but is  {NumberOfCascades}.");
 
 
                             break;
@@ -881,7 +884,7 @@ namespace Fusee.Engine.Core
             var dirViewSpace = float3.Normalize((_rc.View * new float4(dirWorldSpace)).xyz);
             var strength = light.Strength;
 
-            if (strength > 1.0 || strength < 0.0)
+            if (strength is > (float)1.0 or < (float)0.0)
             {
                 strength = M.Clamp(light.Strength, 0.0f, 1.0f);
                 Diagnostics.Warn("Strength of the light will be clamped between 0 and 1.");
@@ -977,7 +980,7 @@ namespace Fusee.Engine.Core
         public override void SetContext(RenderContext rc)
         {
             if (rc == null)
-                throw new ArgumentNullException(nameof(rc));
+                ThrowHelper.ThrowArgumentNullException(nameof(rc));
 
             if (rc != _rc)
             {

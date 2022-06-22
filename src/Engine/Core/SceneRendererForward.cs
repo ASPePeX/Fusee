@@ -10,6 +10,7 @@ using Fusee.Xirkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Toolkit.Diagnostics;
 using Animation = Fusee.Xirkit.Animation;
 
 namespace Fusee.Engine.Core
@@ -220,7 +221,7 @@ namespace Fusee.Engine.Core
                                     {
                                         LerpType.Lerp => Lerp.Float3Lerp,
                                         LerpType.Slerp => Lerp.Float3QuaternionSlerp,
-                                        _ => throw new InvalidOperationException(
+                                        _ => ThrowHelper.ThrowInvalidOperationException<Channel<float3>.LerpFunc>(
              "Unknown lerp type: animTrackContainer.LerpType: " +
              (int)animTrackContainer.LerpType),// C# 6throw new InvalidEnumArgumentException(nameOf(animTrackContainer.LerpType), (int)animTrackContainer.LerpType, typeof(LerpType));
                                                // throw new InvalidEnumArgumentException("animTrackContainer.LerpType", (int)animTrackContainer.LerpType, typeof(LerpType));
@@ -272,7 +273,7 @@ namespace Fusee.Engine.Core
         public virtual void SetContext(RenderContext rc)
         {
             if (rc == null)
-                throw new ArgumentNullException(nameof(rc));
+                ThrowHelper.ThrowArgumentNullException(nameof(rc));
 
             if (rc != _rc)
             {
@@ -616,14 +617,14 @@ namespace Fusee.Engine.Core
                     HorizontalTextAlignment.Left => -_state.UiRect.Size.x / 2,
                     HorizontalTextAlignment.Center => -xfc.Width / 2,
                     HorizontalTextAlignment.Right => _state.UiRect.Size.x / 2 - xfc.Width,
-                    _ => throw new ArgumentException("Invalid Horizontal Alignment"),
+                    _ => ThrowHelper.ThrowArgumentException<float>("Invalid Horizontal Alignment"),
                 };
                 translationY = xfc.VerticalAlignment switch
                 {
                     VerticalTextAlignment.Top => _state.UiRect.Size.y / 2,
                     VerticalTextAlignment.Center => xfc.Height / 2,
                     VerticalTextAlignment.Bottom => xfc.Height - (_state.UiRect.Size.y / 2),
-                    _ => throw new ArgumentException("Invalid Horizontal Alignment"),
+                    _ => ThrowHelper.ThrowArgumentException<float>("Invalid Horizontal Alignment"),
                 };
             }
             else
@@ -638,14 +639,14 @@ namespace Fusee.Engine.Core
                     HorizontalTextAlignment.Left => -_state.UiRect.Size.x * invScaleFactor / 2,
                     HorizontalTextAlignment.Center => -xfc.Width / 2,
                     HorizontalTextAlignment.Right => _state.UiRect.Size.x * invScaleFactor / 2 - xfc.Width,
-                    _ => throw new ArgumentException("Invalid Horizontal Alignment"),
+                    _ => ThrowHelper.ThrowArgumentException<float>("Invalid Horizontal Alignment"),
                 };
                 translationY = xfc.VerticalAlignment switch
                 {
                     VerticalTextAlignment.Top => _state.UiRect.Size.y * invScaleFactor / 2,
                     VerticalTextAlignment.Center => xfc.Height / 2,
                     VerticalTextAlignment.Bottom => xfc.Height - (_state.UiRect.Size.y * invScaleFactor / 2),
-                    _ => throw new ArgumentException("Invalid Horizontal Alignment"),
+                    _ => ThrowHelper.ThrowArgumentException<float>("Invalid Horizontal Alignment"),
                 };
             }
 
