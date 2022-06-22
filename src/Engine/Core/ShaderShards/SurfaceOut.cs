@@ -27,7 +27,7 @@ namespace Fusee.Engine.Core.ShaderShards
     public enum TextureSetup
     {
         /// <summary>
-        /// The effect dosn't have any textures
+        /// The effect doesn't have any textures
         /// </summary>
         NoTextures = 0,
 
@@ -50,7 +50,7 @@ namespace Fusee.Engine.Core.ShaderShards
 
     /// <summary>
     /// Used to specify which color is used for lighting calculation.
-    /// /// </summary>
+    /// </summary>
     public enum ColorMode
     {
         /// <summary>
