@@ -272,9 +272,11 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
                 _gameWindow = new RenderCanvasGameWindow(this, width, height, true, isMultithreaded);
             }
             catch
+#pragma warning disable ERP022 // Unobserved exception in generic exception handler
             {
                 _gameWindow = new RenderCanvasGameWindow(this, width, height, false, isMultithreaded);
             }
+#pragma warning restore ERP022 // Unobserved exception in generic exception handler
 
             WindowHandle = new WindowHandle()
             {

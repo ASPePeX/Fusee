@@ -2,6 +2,9 @@
 
 namespace Fusee.Engine.Common
 {
+    /// <summary>
+    /// Interface for managed mesh
+    /// </summary>
     public interface IManagedMesh : IDisposable
     {
         /// <summary>
@@ -14,6 +17,9 @@ namespace Fusee.Engine.Common
         /// </summary>
         public Suid SessionUniqueIdentifier { get; }
 
+        /// <summary>
+        /// Mesh primitive type
+        /// </summary>
         PrimitiveType MeshType { get; set; }
     }
 }

@@ -849,7 +849,7 @@ namespace Fusee.Math.Core
         /// </returns>
         public override bool Equals(object? obj)
         {
-            if (!(obj is double2))
+            if (obj is not double2)
                 return false;
 
             return this.Equals((double2)obj);
@@ -940,14 +940,7 @@ namespace Fusee.Math.Core
 
             for (int i = 0; i < strings.Length; i++)
             {
-                try
-                {
-                    doubles[i] = double.Parse(strings[i], provider);
-                }
-                catch
-                {
-                    ThrowHelper.ThrowFormatException();
-                }
+                doubles[i] = double.Parse(strings[i], provider);
             }
 
             return new double2(doubles[0], doubles[1]);

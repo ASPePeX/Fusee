@@ -48,29 +48,39 @@ namespace Fusee.PointCloud.Common
         OctOrientBits = (long)(~(long)LevelBits),
     }
 
-    //  Current maximum Octree level is 19
-    //  The entire ID denoting the Octant's zero-based level [0 (top)...18 (floor)] and its "path" is stored in a 64 bit word.
-    //  The octant's depth is encoded in the most significant first seven bits as a signed 7-bit-integer. Negative
-    //  depths denote invalid IDs.
-    //  Each level's octant orientation is encoded in three bits (least significant bit: *L*eft(0) / *R*ight (1),
-    //  medium significant bit: *F*ront (0) / *B*ack (1), most significant bit: *D*own (0) / *U*p (1))
-    //  Groups of three consecutive bits start at bit 0 (LSB) reaching up to (including) bit 56. Altogether this
-    //  allows to encode the octant orientation for 19 levels (= 57 bits / 3).
-    //
-    //  |   LevelBits:  7-bit signed int     |    Octant Orientation Bits. Three consecutive bits for each level     |
-    //  |                                    |    level 0    |    level 1   |   ...   |   level 17   |   level 18    |
-    //  |  SGN  MS                       LS  |  DU | FB | LR | DU | FB | LR |   ...   | DU | FB | LR | DU | FB | LR  |
-    //  |  63 | 62 | 61 | 60 | 59 | 58 | 57  |  56 | 55 | 54 | 53 | 52 | 51 |   ...   | 05 | 04 | 03 | 02 | 01 | 00  |
-    //  |  MSB                                                                                                  LSB  |
-    //
 
 
+
+    /// <summary>
+    ///  Current maximum Octree level is 19
+    ///  The entire ID denoting the Octant's zero-based level [0 (top)...18 (floor)] and its "path" is stored in a 64 bit word.
+    ///  The octant's depth is encoded in the most significant first seven bits as a signed 7-bit-integer. Negative
+    ///  depths denote invalid IDs.
+    ///  Each level's octant orientation is encoded in three bits (least significant bit: *L*eft(0) / *R*ight (1),
+    ///  medium significant bit: *F*ront (0) / *B*ack (1), most significant bit: *D*own (0) / *U*p (1))
+    ///  Groups of three consecutive bits start at bit 0 (LSB) reaching up to (including) bit 56. Altogether this
+    ///  allows to encode the octant orientation for 19 levels (= 57 bits / 3).
+    ///
+    ///  |   LevelBits:  7-bit signed int     |    Octant Orientation Bits. Three consecutive bits for each level     |
+    ///  |                                    |    level 0    |    level 1   |   ...   |   level 17   |   level 18    |
+    ///  |  SGN  MS                       LS  |  DU | FB | LR | DU | FB | LR |   ...   | DU | FB | LR | DU | FB | LR  |
+    ///  |  63 | 62 | 61 | 60 | 59 | 58 | 57  |  56 | 55 | 54 | 53 | 52 | 51 |   ...   | 05 | 04 | 03 | 02 | 01 | 00  |
+    ///  |  MSB                                                                                                  LSB  |
+    ///
+    /// </summary>
     public struct OctantId : IEnumerable<(int, OctantOrientation)>
     {
         private long _id = -1;
 
+        /// <summary>
+        /// Is valid
+        /// </summary>
         public bool Valid => _id >= 0;
 
+        /// <summary>
+        /// Create an <see cref="OctantId"/> instance
+        /// </summary>
+        /// <param name="ooList"></param>
         public OctantId(params OctantOrientation[] ooList)
         {
             _id = 0;

@@ -46,8 +46,10 @@ namespace Fusee.Tools.CmdLine.Verbs
                                 appName + ".dll", SearchOption.AllDirectories).OrderBy(s => s).Reverse().First();
                     }
                     catch (Exception /* ex */)
+#pragma warning disable ERP022 // Unobserved exception in generic exception handler
                     {
                     }
+#pragma warning restore ERP022 // Unobserved exception in generic exception handler
                 }
                 else
                 {
@@ -64,7 +66,7 @@ namespace Fusee.Tools.CmdLine.Verbs
             {
                 var ex = File.Exists(input);
 
-                // A dll was explicitely mentioned. See if it exists
+                // A dll was explicitly mentioned. See if it exists
                 if (File.Exists(input) && Path.GetExtension(input).ToLower() == ".dll")
                 {
                     try
@@ -75,8 +77,10 @@ namespace Fusee.Tools.CmdLine.Verbs
                         dir = Path.Combine(Path.GetPathRoot(fullPath), Path.GetDirectoryName(fullPath));
                     }
                     catch (Exception /* ex */)
+#pragma warning disable ERP022 // Unobserved exception in generic exception handler
                     {
                     }
+#pragma warning restore ERP022 // Unobserved exception in generic exception handler
                 }
                 if (string.IsNullOrEmpty(dllFilePath))
                 {
@@ -183,10 +187,12 @@ namespace Fusee.Tools.CmdLine.Verbs
                         FileTools.DirectoryCopy(Path.Combine(dllDirPath, "Assets"), Path.Combine(outPath, "Assets"), true, true);
                     }
                     catch (Exception ex)
+#pragma warning disable ERP022 // Unobserved exception in generic exception handler
                     {
                         Console.Error.WriteLine("ERROR: internal error while publishing FUSEE Desktop App: " + ex);
                         Environment.Exit((int)ErrorCode.InternalError);
                     }
+#pragma warning restore ERP022 // Unobserved exception in generic exception handler
                     Console.Error.WriteLine($"SUCCESS: FUSEE Desktop App {appName}.exe generated at {outPath}.");
                     Environment.Exit(0);
                     break;
@@ -205,10 +211,12 @@ namespace Fusee.Tools.CmdLine.Verbs
                         FileTools.DirectoryCopy(Path.Combine(dllDirPath, "Assets"), Path.Combine(outPath, "Assets"), true, true);
                     }
                     catch (Exception ex)
+#pragma warning disable ERP022 // Unobserved exception in generic exception handler
                     {
                         Console.Error.WriteLine("ERROR: internal error while publishing FUSEE Web App: " + ex);
                         Environment.Exit((int)ErrorCode.InternalError);
                     }
+#pragma warning restore ERP022 // Unobserved exception in generic exception handler
 
 
                     break;

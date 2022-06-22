@@ -623,14 +623,7 @@ namespace Fusee.Math.Core
 
             for (int i = 0; i < strings.Length; i++)
             {
-                try
-                {
-                    doubles[i] = double.Parse(strings[i], provider);
-                }
-                catch
-                {
-                    ThrowHelper.ThrowFormatException();
-                }
+                doubles[i] = double.Parse(strings[i], provider);
             }
 
             return new double3x3(doubles[0], doubles[1], doubles[2], doubles[3], doubles[4], doubles[5], doubles[6], doubles[7], doubles[8]);

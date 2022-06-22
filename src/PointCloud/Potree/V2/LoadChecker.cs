@@ -5,8 +5,17 @@ using System.IO;
 
 namespace Fusee.PointCloud.Potree.V2
 {
+    /// <summary>
+    /// Checks files to load
+    /// </summary>
     public static class LoadChecker
     {
+        /// <summary>
+        /// Check if we can handle given file
+        /// </summary>
+        /// <param name="pathToNodeFileFolder"></param>
+        /// <param name="ignoreVersion"></param>
+        /// <returns></returns>
         public static bool CanHandleFile(string pathToNodeFileFolder, bool ignoreVersion = false)
         {
             var hierarchyFilePath = Path.Combine(pathToNodeFileFolder, Constants.HierarchyFileName);

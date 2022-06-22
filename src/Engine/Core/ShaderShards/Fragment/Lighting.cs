@@ -1232,20 +1232,60 @@ namespace Fusee.Engine.Core.ShaderShards.Fragment
         }
     }
 
+    /// <summary>
+    /// LightParamStrings
+    /// </summary>
     public struct LightParamStrings
     {
+        /// <summary>
+        /// PositionViewSpace
+        /// </summary>
         public string PositionViewSpace;
+        /// <summary>
+        /// Intensities
+        /// </summary>
         public string Intensities;
+        /// <summary>
+        /// MaxDistance
+        /// </summary>
         public string MaxDistance;
+        /// <summary>
+        /// Strength
+        /// </summary>
         public string Strength;
+        /// <summary>
+        /// OuterAngle
+        /// </summary>
         public string OuterAngle;
+        /// <summary>
+        /// InnerAngle
+        /// </summary>
         public string InnerAngle;
+        /// <summary>
+        /// Direction
+        /// </summary>
         public string Direction;
+        /// <summary>
+        /// LightType
+        /// </summary>
         public string LightType;
+        /// <summary>
+        /// IsActive
+        /// </summary>
         public string IsActive;
+        /// <summary>
+        /// IsCastingShadows
+        /// </summary>
         public string IsCastingShadows;
+        /// <summary>
+        /// Bias
+        /// </summary>
         public string Bias;
 
+        /// <summary>
+        /// Build strings for light params
+        /// </summary>
+        /// <param name="arrayPos"></param>
         public LightParamStrings(int arrayPos)
         {
             PositionViewSpace = $"allLights[{arrayPos}].position";

@@ -154,6 +154,9 @@ namespace Fusee.Engine.Common
         /// </summary>
         bool TangentsSet { get; }
 
+        /// <summary>
+        /// Invalidate Tangents
+        /// </summary>
         void InvalidateTangents();
 
         /// <summary>
@@ -161,6 +164,9 @@ namespace Fusee.Engine.Common
         /// </summary>
         bool BiTangentsSet { get; }
 
+        /// <summary>
+        /// Invalidate BiTangents
+        /// </summary>
         void InvalidateBiTangents();
 
         /// <summary>

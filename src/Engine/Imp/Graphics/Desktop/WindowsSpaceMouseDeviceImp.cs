@@ -214,7 +214,9 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
 
             try
             {
+#pragma warning disable EPS06 // Hidden struct copy operation
                 _current3DConnexionDevice = new _3DconnexionDevice(_handle.ToString());
+#pragma warning restore EPS06 // Hidden struct copy operation
                 _current3DConnexionDevice.InitDevice((IntPtr)_handle);
                 _current3DConnexionDevice.Motion += HandleMotion;
 

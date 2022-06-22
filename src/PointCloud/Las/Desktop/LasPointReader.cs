@@ -26,6 +26,12 @@ namespace Fusee.PointCloud.Las.Desktop
         private IntPtr _ptrToLASClass = new();
         private string _filename;
 
+        /// <summary>
+        /// Returns the point cloud component
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public IPointCloud GetPointCloudComponent(string filename)
         {
             _filename = filename;
@@ -52,16 +58,29 @@ namespace Fusee.PointCloud.Las.Desktop
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Return the octree
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public IPointCloudOctree GetOctree()
         {
             //convert to potree octree
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Loads the node data
+        /// </summary>
+        /// <typeparam name="TPoint"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public TPoint[] LoadNodeData<TPoint>(OctantId id) where TPoint : new()
         {
             throw new NotImplementedException();
         }
+
 
         private void OpenFile(string filename)
         {
@@ -190,6 +209,10 @@ namespace Fusee.PointCloud.Las.Desktop
             return true;
         }
 
+        /// <summary>
+        /// Returns the <see cref="PointType"/>
+        /// </summary>
+        /// <returns></returns>
         public PointType GetPointType()
         {
             //TODO: Complete
@@ -206,11 +229,27 @@ namespace Fusee.PointCloud.Las.Desktop
             }
         }
 
+        /// <summary>
+        /// Loads points for a node in an async manner
+        /// </summary>
+        /// <typeparam name="TPoint"></typeparam>
+        /// <param name="guid"></param>
+        /// <param name="pointAccessor"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public Task<TPoint[]> LoadPointsForNodeAsync<TPoint>(string guid, IPointAccessor pointAccessor) where TPoint : new()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Loads points for a node
+        /// </summary>
+        /// <typeparam name="TPoint"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="pointAccessor"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public TPoint[] LoadNodeData<TPoint>(string id, IPointAccessor pointAccessor) where TPoint : new()
         {
             throw new NotImplementedException();
@@ -235,12 +274,18 @@ namespace Fusee.PointCloud.Las.Desktop
             }
         }
 
+        /// <summary>
+        /// dtor
+        /// </summary>
         ~LasPointReader()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(false);
         }
 
+        /// <summary>
+        /// Dispose
+        /// </summary>
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {

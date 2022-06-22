@@ -167,11 +167,19 @@ namespace Fusee.Engine.Imp.Blazor
             VertexArrayObject = null;
         }
 
+        /// <summary>
+        /// Remove vertex colors 1 from GPU
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
         public void InvalidateColors1()
         {
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// Remove vertex colors 2 from GPU
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
         public void InvalidateColors2()
         {
             throw new System.NotImplementedException();
@@ -195,8 +203,14 @@ namespace Fusee.Engine.Imp.Blazor
         /// </summary>
         public bool VertexArrayObjectSet => VertexArrayObject != null;
 
+        /// <summary>
+        /// Vertex color set 1
+        /// </summary>
         public bool ColorsSet1 => throw new System.NotImplementedException();
 
+        /// <summary>
+        /// Vertex color set 2
+        /// </summary>
         public bool ColorsSet2 => throw new System.NotImplementedException();
 
         #endregion

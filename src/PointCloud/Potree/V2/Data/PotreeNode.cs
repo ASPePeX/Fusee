@@ -40,11 +40,26 @@ namespace Fusee.PointCloud.Potree.V2.Data
         }
     }
 
+    /// <summary>
+    /// Specify node type
+    /// </summary>
     public enum NodeType : int
     {
+        /// <summary>
+        /// Normal
+        /// </summary>
         NORMAL = 0,
+        /// <summary>
+        /// Leaf
+        /// </summary>
         LEAF = 1,
+        /// <summary>
+        /// Proxy
+        /// </summary>
         PROXY = 2,
+        /// <summary>
+        /// Unset
+        /// </summary>
         UNSET = -1
     }
 }

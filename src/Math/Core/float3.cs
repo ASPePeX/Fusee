@@ -1,8 +1,8 @@
+using Microsoft.Toolkit.Diagnostics;
 using ProtoBuf;
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace Fusee.Math.Core
 {
@@ -1224,7 +1224,7 @@ namespace Fusee.Math.Core
         /// </returns>
         public override bool Equals(object? obj)
         {
-            if (!(obj is float3))
+            if (obj is not float3)
                 return false;
 
             return Equals((float3)obj);
@@ -1316,14 +1316,7 @@ namespace Fusee.Math.Core
 
             for (int i = 0; i < strings.Length; i++)
             {
-                try
-                {
-                    floats[i] = float.Parse(strings[i], provider);
-                }
-                catch
-                {
-                    ThrowHelper.ThrowFormatException();
-                }
+                floats[i] = float.Parse(strings[i], provider);
             }
 
             return new float3(floats[0], floats[1], floats[2]);

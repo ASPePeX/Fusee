@@ -66,8 +66,7 @@ namespace Fusee.Base.Imp.Blazor
             mainExecutable?.Resize(newX, newY);
         }
 
-        private static readonly Stopwatch _sw;
-        private static Stopwatch SW => _sw ?? new Stopwatch();
+        private static readonly Stopwatch _sw = new();
 
         /// <summary>
         /// Main application loop, triggered via Javascript RequestAnimationFrame
@@ -81,10 +80,10 @@ namespace Fusee.Base.Imp.Blazor
             previousMilliseconds = milliseconds;
 
             // calculate time from last render call + time it took to update the method
-            SW.Start();
+            _sw.Start();
             mainExecutable.Update(elapsedMilliseconds);
-            var updateDelta = elapsedMilliseconds + SW.ElapsedMilliseconds;
-            SW.Stop();
+            var updateDelta = elapsedMilliseconds + _sw.ElapsedMilliseconds;
+            _sw.Stop();
 
             mainExecutable.Draw(updateDelta);
         }
