@@ -19,15 +19,13 @@ namespace Fusee.Engine.Imp.Graphics.Android
         /// <param name="renderCanvas">The render canvas to provide mouse and keyboard input for.</param>
         public RenderCanvasInputDriverImp(IRenderCanvasImp renderCanvas)
         {
-            if (renderCanvas == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
+            Guard.IsNotNull(renderCanvas, nameof(renderCanvas));
 
-            if (!(renderCanvas is RenderCanvasImp))
-                ThrowHelper.ThrowArgumentException($"renderCanvas must be of type {typeof(RenderCanvasImp).FullName}.", nameof(renderCanvas));
+            Guard.IsOfType(renderCanvas, typeof(RenderCanvasImp), nameof(renderCanvas));
 
             _view = ((RenderCanvasImp)renderCanvas).View;
-            if (_view == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(_view));
+
+            Guard.IsNotNull(_view, nameof(_view));
 
             _touch = new TouchDeviceImp(_view);
             _keyboard = new KeyboardDeviceImp(_view);

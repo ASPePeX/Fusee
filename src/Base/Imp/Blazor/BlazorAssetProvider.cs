@@ -163,7 +163,7 @@ namespace Fusee.Base.Imp.Blazor
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override bool CheckExists(string id)
         {
-            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
+            Guard.IsNotNull(id, nameof(id));
 
             string baseAddress = BlazorAssetProvider.GetLocalAddress(_runtime).Result + "Assets/";
             using HttpClient httpClient = new() { BaseAddress = new Uri(baseAddress) };
@@ -181,7 +181,7 @@ namespace Fusee.Base.Imp.Blazor
         /// <exception cref="System.ArgumentNullException"></exception>
         protected override async Task<bool> CheckExistsAsync(string id)
         {
-            if (id == null) ThrowHelper.ThrowArgumentNullException(nameof(id));
+            Guard.IsNotNull(id, nameof(id));
 
             string baseAddress = await BlazorAssetProvider.GetLocalAddress(_runtime) + "Assets/";
             using HttpClient httpClient = new() { BaseAddress = new Uri(baseAddress) };

@@ -312,8 +312,8 @@ namespace Fusee.Engine.Core
         /// <param name="creator"></param>
         public void RegisterInputDeviceType(MatchFunc match, CreatorFunc creator)
         {
-            if (match == null) ThrowHelper.ThrowArgumentNullException(nameof(match));
-            if (creator == null) ThrowHelper.ThrowArgumentNullException(nameof(creator));
+            Guard.IsNotNull(match, nameof(match));
+            Guard.IsNotNull(creator, nameof(creator));
 
             _specialDeviceCreators.Add(new SpecialDeviceCreator { Match = match, Creator = creator });
 
@@ -379,8 +379,7 @@ namespace Fusee.Engine.Core
         /// </remarks>
         public void AddInputDriverImp(IInputDriverImp inputDriver)
         {
-            if (inputDriver == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(inputDriver));
+            Guard.IsNotNull(inputDriver, nameof(inputDriver));
 
             foreach (var deviceImp in inputDriver.Devices)
             {

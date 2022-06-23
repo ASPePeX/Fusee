@@ -272,8 +272,8 @@ namespace Fusee.Engine.Core
         /// <param name="rc"></param>
         public virtual void SetContext(RenderContext rc)
         {
-            if (rc == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(rc));
+            Guard.IsNotNull(rc, nameof(rc));
+
 
             if (rc != _rc)
             {

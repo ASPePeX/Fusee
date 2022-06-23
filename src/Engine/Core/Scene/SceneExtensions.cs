@@ -175,8 +175,9 @@ namespace Fusee.Engine.Core.Scene
         /// <returns>A List of components of the specified type, if contained within the given container.</returns>
         public static void RemoveComponentsInChildren(this SceneNode snThisThis, Type type)
         {
-            if (snThisThis == null || type == null)
-                ThrowHelper.ThrowArgumentException("SceneNode or type is null!");
+            Guard.IsNotNull(snThisThis, nameof(snThisThis));
+            Guard.IsNotNull(type, nameof(type));
+
 
             foreach (var child in snThisThis.Children)
             {
@@ -272,8 +273,9 @@ namespace Fusee.Engine.Core.Scene
         /// <returns>A component of the specified type, if contained within the given container, null otherwise.</returns>
         public static void RemoveComponent(this SceneNode snThisThis, Type type, int inx = 0)
         {
-            if (snThisThis == null || snThisThis.Components == null || type == null)
-                ThrowHelper.ThrowArgumentException("SceneNode or type is null!");
+            Guard.IsNotNull(snThisThis, nameof(snThisThis));
+            Guard.IsNotNull(snThisThis.Components, nameof(snThisThis.Components));
+            Guard.IsNotNull(type, nameof(type));
 
             var inxC = 0;
             for (var i = 0; i < snThisThis.Components.Count; i++)

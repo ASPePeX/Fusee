@@ -2390,10 +2390,9 @@ namespace Fusee.Engine.Imp.Graphics.Android
             {
                 var texHandle = texHandles[depthTexPos];
 
-                if (texHandle != null)
-                    GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, TextureTarget.Texture2D, ((TextureHandle)texHandle).TexHandle, 0);
-                else
-                    ThrowHelper.ThrowArgumentNullException("Texture handle is null!");
+                Guard.IsNotNull(texHandle, nameof(texHandle));
+
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, TextureTarget.Texture2D, ((TextureHandle)texHandle).TexHandle, 0);
 
                 GL.ColorMask(false, false, false, false);
                 //GL.DrawBuffers(0, new DrawBufferMode[1] { DrawBufferMode.None }); //TODO: Correct call? GL.DrawBuffer(DrawBufferMode.None) does not exist.

@@ -329,11 +329,11 @@ namespace Fusee.Engine.Core.Effects
                             break;
                     }
                 }
-                if (shaderAttribute == null)
-                    ThrowHelper.ThrowArgumentException("Field has no ShaderAttribute!");
+                // Field has no ShaderAttribute!
+                Guard.IsNotNull(shaderAttribute, nameof(shaderAttribute));
 
-                if (shardAttribute == null)
-                    ThrowHelper.ThrowArgumentException("Field has no ShardAttribute!");
+                // Field has no ShardAttribute!
+                Guard.IsNotNull(shardAttribute, nameof(shardAttribute));
 
                 switch (shardAttribute.ShardCategory)
                 {

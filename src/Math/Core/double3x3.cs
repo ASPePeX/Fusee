@@ -545,7 +545,7 @@ namespace Fusee.Math.Core
         /// <returns>True if the instances are equal; false otherwise.</returns>
         public override bool Equals(object? obj)
         {
-            if (!(obj is double3x3))
+            if (obj is not double3x3)
                 return false;
 
             return Equals((double3x3)obj);

@@ -164,15 +164,12 @@ namespace Fusee.Engine.Imp.Graphics.Blazor
         /// <param name="runtime"></param>
         public RenderCanvasInputDriverImp(IRenderCanvasImp renderCanvas, IJSRuntime runtime)
         {
-            if (renderCanvas == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
-
-            if (!(renderCanvas is RenderCanvasImp))
-                ThrowHelper.ThrowArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
+            Guard.IsNotNull(renderCanvas, nameof(renderCanvas));
+            Guard.IsOfType(renderCanvas, typeof(RenderCanvasImp), nameof(renderCanvas));
 
             _canvas = ((RenderCanvasImp)renderCanvas)._canvas;
-            if (_canvas == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(_canvas));
+
+            Guard.IsNotNull(_canvas, nameof(_canvas));
 
             this.runtime = runtime;
 

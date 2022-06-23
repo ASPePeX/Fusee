@@ -20,15 +20,12 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <param name="renderCanvas">The render canvas to provide mouse and keyboard input for.</param>
         public RenderCanvasInputDriverImp(IRenderCanvasImp renderCanvas)
         {
-            if (renderCanvas == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(renderCanvas));
-
-            if (!(renderCanvas is RenderCanvasImp))
-                ThrowHelper.ThrowArgumentException("renderCanvas must be of type RenderCanvasImp", nameof(renderCanvas));
+            Guard.IsNotNull(renderCanvas, nameof(renderCanvas));
+            Guard.IsOfType(renderCanvas, typeof(RenderCanvasImp), nameof(renderCanvas));
 
             _gameWindow = ((RenderCanvasImp)renderCanvas)._gameWindow;
-            if (_gameWindow == null)
-                ThrowHelper.ThrowArgumentNullException(nameof(_gameWindow));
+
+            Guard.IsNotNull(_gameWindow, nameof(_gameWindow));
 
             _keyboard = new KeyboardDeviceImp(_gameWindow);
             _mouse = new MouseDeviceImp(_gameWindow);

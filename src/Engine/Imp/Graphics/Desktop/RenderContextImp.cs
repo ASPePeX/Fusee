@@ -1310,10 +1310,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetVertices(IMeshImp mr, float3[] vertices)
         {
-            if (vertices == null || vertices.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("Vertices must not be null or empty");
-            }
+            Guard.IsNotNull(vertices, nameof(vertices));
+            Guard.IsGreaterThan(vertices.Length, 0, nameof(vertices));
 
             int vertsBytes = vertices.Length * 3 * sizeof(float);
             if (((MeshImp)mr).VertexBufferObject == 0)
@@ -1338,10 +1336,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetTangents(IMeshImp mr, float4[] tangents)
         {
-            if (tangents == null || tangents.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("Tangents must not be null or empty");
-            }
+            Guard.IsNotNull(tangents, nameof(tangents));
+            Guard.IsGreaterThan(tangents.Length, 0, nameof(tangents));
 
             int tangentBytes = tangents.Length * 4 * sizeof(float);
             if (((MeshImp)mr).TangentBufferObject == 0)
@@ -1366,10 +1362,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetBiTangents(IMeshImp mr, float3[] bitangents)
         {
-            if (bitangents == null || bitangents.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("BiTangents must not be null or empty");
-            }
+            Guard.IsNotNull(bitangents, nameof(bitangents));
+            Guard.IsGreaterThan(bitangents.Length, 0, nameof(bitangents));
 
             int bitangentBytes = bitangents.Length * 3 * sizeof(float);
             if (((MeshImp)mr).BitangentBufferObject == 0)
@@ -1394,10 +1388,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetNormals(IMeshImp mr, float3[] normals)
         {
-            if (normals == null || normals.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("Normals must not be null or empty");
-            }
+            Guard.IsNotNull(normals, nameof(normals));
+            Guard.IsGreaterThan(normals.Length, 0, nameof(normals));
 
             int normsBytes = normals.Length * 3 * sizeof(float);
             if (((MeshImp)mr).NormalBufferObject == 0)
@@ -1422,10 +1414,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetBoneIndices(IMeshImp mr, float4[] boneIndices)
         {
-            if (boneIndices == null || boneIndices.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("BoneIndices must not be null or empty");
-            }
+            Guard.IsNotNull(boneIndices, nameof(boneIndices));
+            Guard.IsGreaterThan(boneIndices.Length, 0, nameof(boneIndices));
 
             int indicesBytes = boneIndices.Length * 4 * sizeof(float);
             if (((MeshImp)mr).BoneIndexBufferObject == 0)
@@ -1450,10 +1440,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetBoneWeights(IMeshImp mr, float4[] boneWeights)
         {
-            if (boneWeights == null || boneWeights.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("BoneWeights must not be null or empty");
-            }
+            Guard.IsNotNull(boneWeights, nameof(boneWeights));
+            Guard.IsGreaterThan(boneWeights.Length, 0, nameof(boneWeights));
 
             int weightsBytes = boneWeights.Length * 4 * sizeof(float);
             if (((MeshImp)mr).BoneWeightBufferObject == 0)
@@ -1478,10 +1466,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetUVs(IMeshImp mr, float2[] uvs)
         {
-            if (uvs == null || uvs.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("UVs must not be null or empty");
-            }
+            Guard.IsNotNull(uvs, nameof(uvs));
+            Guard.IsGreaterThan(uvs.Length, 0, nameof(uvs));
 
             int uvsBytes = uvs.Length * 2 * sizeof(float);
             if (((MeshImp)mr).UVBufferObject == 0)
@@ -1506,10 +1492,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetColors(IMeshImp mr, uint[] colors)
         {
-            if (colors == null || colors.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("colors must not be null or empty");
-            }
+            Guard.IsNotNull(colors, nameof(colors));
+            Guard.IsGreaterThan(colors.Length, 0, nameof(colors));
 
             int colsBytes = colors.Length * sizeof(uint);
             if (((MeshImp)mr).ColorBufferObject == 0)
@@ -1534,10 +1518,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetColors1(IMeshImp mr, uint[] colors)
         {
-            if (colors == null || colors.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("colors must not be null or empty");
-            }
+            Guard.IsNotNull(colors, nameof(colors));
+            Guard.IsGreaterThan(colors.Length, 0, nameof(colors));
 
             int colsBytes = colors.Length * sizeof(uint);
             if (((MeshImp)mr).ColorBufferObject1 == 0)
@@ -1562,10 +1544,8 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetColors2(IMeshImp mr, uint[] colors)
         {
-            if (colors == null || colors.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("colors must not be null or empty");
-            }
+            Guard.IsNotNull(colors, nameof(colors));
+            Guard.IsGreaterThan(colors.Length, 0, nameof(colors));
 
             int colsBytes = colors.Length * sizeof(uint);
             if (((MeshImp)mr).ColorBufferObject2 == 0)
@@ -1590,10 +1570,9 @@ namespace Fusee.Engine.Imp.Graphics.Desktop
         /// <exception cref="ApplicationException"></exception>
         public void SetTriangles(IMeshImp mr, ushort[] triangleIndices)
         {
-            if (triangleIndices == null || triangleIndices.Length == 0)
-            {
-                ThrowHelper.ThrowArgumentException("triangleIndices must not be null or empty");
-            }
+            Guard.IsNotNull(triangleIndices, nameof(triangleIndices));
+            Guard.IsGreaterThan(triangleIndices.Length, 0, nameof(triangleIndices));
+
             ((MeshImp)mr).NElements = triangleIndices.Length;
             int trisBytes = triangleIndices.Length * sizeof(short);
 

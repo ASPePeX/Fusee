@@ -1003,11 +1003,8 @@ namespace Fusee.Engine.Core
         /// the gpu.</remarks>
         public void SetEffect(Effect ef, bool renderForward = true)
         {
-            if (_rci == null)
-                ThrowHelper.ThrowArgumentNullException("No render context Implementation found!");
-
-            if (ef == null)
-                ThrowHelper.ThrowArgumentNullException("No Effect found!");
+            Guard.IsNotNull(_rci, nameof(_rci));
+            Guard.IsNotNull(ef, nameof(ef));
 
             // Is this shader effect already built?
             if (_effectManager.GetEffect(ef) == null)
