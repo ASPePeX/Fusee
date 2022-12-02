@@ -24,16 +24,8 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 7.0.x
-    - name: dotnet tool restore
-      run: dotnet tool restore
-    - name: dotnet format folder
-      run: dotnet tool run dotnet-format -f . --exclude src\Engine\Imp\Graphics\Shared
     - name: dotnet format solution
-      run: dotnet tool run dotnet-format Fusee.sln
-#    - name: dotnet format fix style - warn
-#      run: dotnet tool run dotnet-format Fusee.sln --no-restore --fix-style warn
-#    - name: dotnet format fix style - info
-#      run: dotnet tool run dotnet-format Fusee.sln --no-restore --fix-style info
+      run: dotnet format Fusee.sln
     - name: Commiting changes
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
