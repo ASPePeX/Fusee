@@ -13,7 +13,7 @@ on:
 
 jobs:
   lint:
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
     name: Linting
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -40,7 +40,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'windows-2022', 'ubuntu-latest', 'macos-latest' ]
+        os: [ 'windows-latest', 'ubuntu-latest', 'macos-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -73,7 +73,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'windows-2022' ]
+        os: [ 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -102,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'windows-2022', 'ubuntu-latest', 'macos-latest' ]
+        os: [ 'windows-latest', 'ubuntu-latest', 'macos-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -139,7 +139,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'windows-2022' ]
+        os: [ 'windows-latest' ]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
@@ -238,7 +238,7 @@ jobs:
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       DOTNET_NOLOGO: true
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -259,7 +259,7 @@ jobs:
     env:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       DOTNET_NOLOGO: true
-    runs-on: windows-2019
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
